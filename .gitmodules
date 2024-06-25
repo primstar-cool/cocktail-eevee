@@ -1,0 +1,3 @@
+[submodule "build_tools/eevee"]
+	path = build_tools/eevee
+	url = https://github.com/primstar-cool/eevee.git

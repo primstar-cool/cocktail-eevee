@@ -1,4 +1,4 @@
-debugger
+// debugger
 const EventCenter = require("./event_center")
 module.exports = class EventTriggerHolder {
   protected m_callback?: any;

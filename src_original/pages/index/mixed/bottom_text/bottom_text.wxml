@@ -1,0 +1,3 @@
+<view class="user-motto">
+  <text catchtap="onTapText">{{text}}</text>
+</view>

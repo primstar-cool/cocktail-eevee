@@ -15,47 +15,29 @@ page {
   align-items: center;
   color: #aaa;
   width: 80%;
+
+  >.avatar {
+    display: block;
+    width: 112rpx;
+    height: 112rpx;
+    border-radius: 4rpx;
+  }
+
+  >.nickname-wrapper {
+    display: flex;
+    width: 100%;
+    padding: 32rpx;
+    box-sizing: border-box;
+    border-top: .5px solid rgba(0, 0, 0, 0.1);
+    border-bottom: .5px solid rgba(0, 0, 0, 0.1);
+    color: black;
+    margin-top: 60rpx;
+
+    >.nickname-label {
+      width: 210rpx;
+    }
+  }
+  
 }
 
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.usermotto {
-  margin-top: 200px;
-}
-.avatar-wrapper {
-  padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
-}
-
-.nickname-wrapper {
-  display: flex;
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
-}
-
-.nickname-label {
-  width: 105px;
-}
-
-.nickname-input {
-  flex: 1;
-}
+@import "./mixed/bottom_text/bottom_text.less";

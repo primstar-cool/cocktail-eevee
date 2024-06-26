@@ -2,14 +2,19 @@
   "name": "miniprogram-ts-less-quickstart",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "",
-  "dependencies": {
-  },
   "devDependencies": {
-    "miniprogram-api-typings": "^2.8.3-1"
+    "@babel/core": "^7.23.2",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-preset-typescript": "^7.0.0-alpha.19",
+    "fs": "0.0.1-security",
+    "less": "^4.2.0",
+    "miniprogram-api-typings": "^2.8.3-1",
+    "path": "^0.12.7",
+    "rollup": "^3.1.0",
+    "typescript": "^5.2.2"
   }
 }

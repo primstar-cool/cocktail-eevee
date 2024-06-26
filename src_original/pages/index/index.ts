@@ -15,11 +15,11 @@ PageBase({
     userInfo: {
       avatarUrl: defaultAvatarUrl,
       nickName: '',
-    },
+    } ,
     hasUserInfo: false,
     canIUseGetUserProfile: wx.canIUse('getUserProfile'),
     canIUseNicknameComp: wx.canIUse('input.type.nickname'),
-  },
+  } as {motto: String, userInfo: {avatarUrl: String, nickName: String}, hasUserInfo: boolean },
 
 
   onLoad(options) {

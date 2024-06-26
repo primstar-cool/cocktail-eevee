@@ -1,5 +1,5 @@
 export = class BottomText implements CktlV3.IPageMixed {
-  getPrivateData(_page: CktlV3.PageBase) {
+  getPrivateData(_page: CktlV3.PageBase): {text: string} {
     return {text: "Hello Cocktail"}
   }
 

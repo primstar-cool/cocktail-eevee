@@ -1,5 +1,5 @@
 // debugger
-module.exports = class EventTriggerOnce extends require("./event_trigger_holder") {
+export = class EventTriggerOnce extends require("./event_trigger_holder") {
 
   protected _callbackWrap(evtId: CktlV3.EventID, data: any, sender: any, refer: { refer: any; self: EventTriggerOnce }) {
     let self: EventTriggerOnce = refer.self;

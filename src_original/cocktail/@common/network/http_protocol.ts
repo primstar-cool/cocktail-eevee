@@ -46,4 +46,4 @@ class HttpProtocol {
   }
 }
 
-module.exports = HttpProtocol;
+export = HttpProtocol;

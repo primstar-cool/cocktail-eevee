@@ -187,4 +187,4 @@ class HttpRequestManager {
   }
 }
 
-module.exports = HttpRequestManager;
+export = HttpRequestManager;

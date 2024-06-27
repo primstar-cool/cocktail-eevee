@@ -31,4 +31,4 @@ class HttpRequestTask {
   }
 }
 
-module.exports = HttpRequestTask;
+export = HttpRequestTask;

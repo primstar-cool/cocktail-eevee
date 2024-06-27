@@ -1,6 +1,6 @@
 // debugger
 const EventCenter = require("./event_center")
-module.exports = class EventTriggerHolder {
+export = class EventTriggerHolder {
   protected m_callback?: any;
   protected m_referWrap?: { refer: any; self: EventTriggerHolder };
   protected m_eventType?: CktlV3.EventID;

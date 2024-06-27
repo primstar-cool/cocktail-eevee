@@ -21,4 +21,4 @@ function setApp(app: CktlV3.AppBase):void {
   }
 }
 
-module.exports = { setApp };
+export = { setApp };

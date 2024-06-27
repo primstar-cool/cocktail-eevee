@@ -4,7 +4,7 @@
  * a frame for event notify
  */
 
-module.exports = class EventCenter implements CktlV3.IEventCenter {
+export = class EventCenter implements CktlV3.IEventCenter {
 
     /*DEBUG_START*/
     private constructor() {}

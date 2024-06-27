@@ -23,7 +23,7 @@
   },
   "include": [
     "./**/*.ts"
-, "src_original/cocktail/platform_mp/debug/console_extends.js"  ],
+, "src_original/cocktail/platform_mp/debug/console_extends.js", "src_original/cocktail/@complie/target_compile_platform.js"  ],
   "exclude": [
     "node_modules"
   ]

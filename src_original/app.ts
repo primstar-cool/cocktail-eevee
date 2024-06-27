@@ -1,7 +1,6 @@
 
 // import AppBase from "./cocktail/@union/framework/app_base";
-const AppBase: CktlV3.IAppCreator = require("./cocktail/@union/framework/app_base");
-
+import AppBase from "./cocktail/@union/framework/app_base"
 
 // const EventTriggerOnce = require("./cocktail/@union/event/event_trigger_once");
 // const EventTriggerHolder = require("./cocktail/@union/event/event_trigger_holder");

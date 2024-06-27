@@ -18,6 +18,7 @@ pagePaths.forEach(
         let checkWxmlFileName = path.join(srcRootPath, pagePath + '.wxml');
         let checkWxssFileName = path.join(srcRootPath, pagePath + '.wxss');
         let checkLessFileName = path.join(srcRootPath, pagePath + '.less');
+        let checkTsFileName = path.join(srcRootPath, pagePath + '.ts');
 
         if (fs.existsSync(checkWxmlFileName)) {
             const wxmlToStandardTool = require("../eevee/eevee/_to_standard/from_wxml/wxml_to_standard.js");
@@ -41,6 +42,15 @@ pagePaths.forEach(
                 const lessParser = require("../eevee/eevee/parser/parse_less.js");
                 let result = lessParser(_readFileFunc(checkLessFileName), checkLessFileName, srcRootPath, _readFileFunc, true);
                 eeveeResult.childNodes = eeveeResult.childNodes.concat(result)
+            } 
+
+            if (fs.existsSync(checkTsFileName)) {
+
+                const mptsParser = require("./parser/parse_mp_ts.js");
+                let result = mptsParser(_readFileFunc(checkTsFileName), checkTsFileName);
+
+                eeveeResult.childNodes = eeveeResult.childNodes.concat(result)
+
             }
 
 

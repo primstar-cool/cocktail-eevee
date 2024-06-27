@@ -1,13 +1,12 @@
 // logs.ts
 // const util = require('../../utils/util.js')
-
-var PageBase: CktlV3.IPageCreator = require("../../cocktail/@union/framework/page_base");
+import PageBase from "../../cocktail/@union/framework/page_base";
 
 PageBase({
   pageName: "logs",
   data: {
     logs: [],
-  },
+  } as {logs: string[]},
   onLoad() {
     setTimeout(
       ()=> {

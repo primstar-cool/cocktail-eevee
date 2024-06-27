@@ -1,0 +1,34 @@
+{
+  "avatar": {
+    "$info": {
+      "readme": "mode can be CONVERT, MAPPING or DECONSTRUCT",
+      "refers": [
+        "pages/index/index.json"
+      ]
+    },
+    "H5_VUE": {
+      "mode": "CONVERT",
+      "path": "pages/index/component/avatar/avatar"
+    },
+    "H5_REACT": {
+      "mode": "CONVERT",
+      "path": "pages/index/component/avatar/avatar"
+    },
+    "NODE_VUE": {
+      "mode": "CONVERT",
+      "path": "pages/index/component/avatar/avatar"
+    },
+    "NODE_REACT": {
+      "mode": "CONVERT",
+      "path": "pages/index/component/avatar/avatar"
+    },
+    "WXMP": {
+      "mode": "CONVERT",
+      "path": "pages/index/component/avatar/avatar"
+    },
+    "HARMONRY": {
+      "mode": "CONVERT",
+      "path": "pages/index/component/avatar/avatar"
+    }
+  }
+}

@@ -109,7 +109,9 @@ module.exports = function (
                     v2 => {
                         if (v2.type === 'PropertySignature') {
                             ASSERT(v2.children[0].type === 'Identifier')
-                            ASSERT(v2.children[1].type === 'TypeLiteral' || v2.children[1].type === 'TypeReference')
+                            ASSERT(v2.children[1].type === 'TypeLiteral' || v2.children[1].type === 'TypeReference'
+                                || v2.children[1].type === "NumberKeyword" || v2.children[1].type === "StringKeyword" || v2.children[1].type === "ArrayType"
+                            )
                             
                             let propertyName = v2.children[0].text.trim()
                             let codeNode = objectLiteralNode.children.find(v3 => 
@@ -130,7 +132,7 @@ module.exports = function (
                                 }
                             );
 
-                            debugger
+                            // debugger
                         } else {
                             
                             
@@ -139,7 +141,7 @@ module.exports = function (
                 )
                 
 
-                debugger
+                // debugger
             } else {
                 console.warn("no data as Expression");
             }

@@ -62,11 +62,43 @@ pagePaths.forEach(
     
                 fs.writeFileSync(path.join(srcRootPath, "../tmp/" + pageName + '.json'), eeveeResultString, 'utf8');
             }
+
+            const standardToDestTool = require("../eevee/eevee/_from_standard/to_arkts/standard_to_arkts.js");
+            destFileDict = standardToDestTool(eeveeResult, {
+                env: "HARMONY",
+                mainClassName: pageName,
+                tagMappingFn: _getComponentMappingFn()
+            });
+
+            debugger
             
 
         }
     }
-)
+);
+
+var componentConfig;
+function _getComponentMappingFn() {
+    if (!componentConfig) {
+        require("./common/generate_component_config.js");
+        componentConfig = require("../config/component_config.json")
+    }
+
+
+    return (tagName, node)=> {
+        let componentCfgPlatform = componentConfig[tagName]?.HARMONRY;
+
+        if (componentCfgPlatform) {
+            // debugger
+            if (componentCfgPlatform.mode === 'CONVERT') {
+                return tagName[0].toUpperCase() + tagName.substr(1)
+            }
+            
+        }
+    }
+
+}
+
 
 function _readFileFunc(filename) {
 

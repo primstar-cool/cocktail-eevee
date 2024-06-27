@@ -1,0 +1,7 @@
+<view class="userinfo">
+
+<image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+<view class="nickname-wrapper" catchtap="bindViewTap">
+  <text class="nickname-label">昵称</text>
+</view>
+</view>

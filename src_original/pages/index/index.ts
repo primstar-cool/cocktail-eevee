@@ -11,15 +11,11 @@ var PageBase: CktlV3.IPageCreator = require("../../cocktail/@union/framework/pag
 PageBase({
   pageName: "abc",
   data: {
-    motto: 'Hello World',
     userInfo: {
       avatarUrl: defaultAvatarUrl,
       nickName: '',
     } ,
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
-  } as {motto: String, userInfo: {avatarUrl: String, nickName: String}, hasUserInfo: boolean },
+  } as {userInfo: {avatarUrl: String, nickName: String}},
 
 
   onLoad(options) {

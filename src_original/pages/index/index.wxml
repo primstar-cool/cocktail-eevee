@@ -1,15 +1,5 @@
 <!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<view class="scrollarea">
-  <view class="container">
-    <view class="userinfo">
-
-        <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        <view class="nickname-wrapper" catchtap="bindViewTap">
-          <text class="nickname-label">昵称</text>
-        </view>
-    </view>
-    <include src="./mixed/bottom_text/bottom_text.wxml"/>
-   
-  </view>
+<view class="container">
+  <avatar userInfo="{{userInfo}}"/>
+  <include src="./mixed/bottom_text/bottom_text.wxml"/>
 </view>

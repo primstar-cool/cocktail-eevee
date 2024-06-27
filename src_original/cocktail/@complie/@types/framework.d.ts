@@ -89,7 +89,8 @@ declare namespace CktlV3 {
     /**
      * 组件的属性列表
      */
-    properties?: {[key:string]:  {type: any,value?: any}|Boolean|String|Number},
+    data?: {[key:string]: {type: any,value?: any}|Boolean|String|Number},
+    properties?: {[key:string]: {type: any,value?: any}|Boolean|String|Number},
     lifetimes?: {
       created?: (this: ComponentBase) => void,
       attached?: (this: ComponentBase) => void,

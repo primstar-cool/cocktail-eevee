@@ -13,9 +13,22 @@ PageBase({
     userInfo: {
       avatarUrl: defaultAvatarUrl,
       nickName: '',
+      complex: {
+        z: 2,
+        a: {b: 1},
+        c: "2"
+      }
     },
     sharePageData: 2,
-  } as {userInfo: {avatarUrl: string, nickName: string}, sharePageData: number},
+  } as {userInfo: {avatarUrl: string, nickName: string,
+    complex: {
+      z: number,
+      a: {b: number},
+      c: string
+    }
+
+
+  }, sharePageData: number},
 
 
   onLoad(options) {

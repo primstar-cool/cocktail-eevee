@@ -70,6 +70,13 @@ pagePaths.forEach(
                 tagMappingFn: _getComponentMappingFn()
             });
 
+
+            if (saveTmpFile) {
+                for (let key in destFileDict) {
+                    fs.writeFileSync(path.join(srcRootPath, "../tmp/" + key), destFileDict[key], 'utf8');
+                }
+            }
+
             debugger
             
 

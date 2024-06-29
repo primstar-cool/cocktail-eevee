@@ -3,3 +3,17 @@
 node_modules/
 
 tmp/
+
+
+src_harmony/node_modules
+src_harmony/oh_modules
+src_harmony/local.properties
+src_harmony/.idea
+src_harmony/**/build
+src_harmony/.hvigor
+src_harmony/.cxx
+src_harmony/.clangd
+src_harmony/.clang-format
+src_harmony/.clang-tidy
+src_harmony/**/.test
+src_harmony/.appanalyzer

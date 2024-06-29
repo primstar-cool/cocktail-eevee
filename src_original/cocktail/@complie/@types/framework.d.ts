@@ -1,126 +1,162 @@
 declare namespace CktlV3 {
+  // type SimpleObject = Record<string, number|string|boolean|null|undefined>
+  // type SimpleObjectTree = Record<string, number|string|boolean|null|undefined|SimpleObject>
 
-  type AppBase = {
-    globalData?: any, 
-    __service_block__: any,
-    ec: IEventCenter,
-    onShow: IAppBaseLifeCycleQuery,
-    onLaunch: IAppBaseLifeCycleOptions,
-    onPageNotFound: IAppBaseLifeCycleQuery,
-    onHide: IAppBaseLifeCycleVoid,
-    onError: IAppBaseLifeCycleAny,
+
+  // <T extends IAnyObject>(options: Options<T>): void
+  interface IAppParams {
+    // globalData?: any, 
+    onShow?: IAppBaseLifeCycleQuery;
+    onLaunch?: IAppBaseLifeCycleOptions;
+    onHide?: IAppBaseLifeCycleVoid;
+    onError?: IAppBaseLifeCycleAny;
+    onPageNotFound?: IAppBaseLifeCycleQuery;
   }
 
-  type AppParams = {
-    globalData?: any, 
-    onShow?: IAppParamLifeCycleQuery|IAppBaseLifeCycleQuery,
-    onLaunch?: IAppBaseLifeCycleOptions,
-    onPageNotFound?: IAppParamLifeCycleQuery|IAppBaseLifeCycleQuery,
+  interface IAppBase extends IAppParams{
 
-    onHide?: IAppParamLifeCycleVoid|IAppBaseLifeCycleVoid,
-    onError?: IAppParamLifeCycleAny|IAppBaseLifeCycleAny,
+    __service_block__: Record<string, number>;
+    ec: IEventCenter;
+    onShow: IAppBaseLifeCycleQuery;
+    onLaunch: IAppBaseLifeCycleOptions;
+    onPageNotFound: IAppBaseLifeCycleQuery;
+    onHide: IAppBaseLifeCycleVoid;
+    onError: IAppBaseLifeCycleAny;
+  }
+
+  
+
+  // interface AppParams extends AppParamsDefault {}
+
+  type AppLifeCycleParamAny = Record<string, number|string>;
+  type AppLifeCycleParamQuery = Record<string, string>;
+  type AppLifeCycleParamOptions = {query: AppLifeCycleParamQuery, mode: string, path: string, scene?:string, referrerInfo?: object};
+
+
+  type IAppBaseLifeCycleVoid = (this: IAppBase) => void;
+  type IAppBaseLifeCycleAny = (this: IAppBase, options: AppLifeCycleParamAny) => void;
+  type IAppBaseLifeCycleQuery = (this: IAppBase, options: AppLifeCycleParamQuery) => void;
+  type IAppBaseLifeCycleOptions = (this: IAppBase, options: AppLifeCycleParamOptions) => void;
+
+  type IAppCreator = <T extends CktlV3.IAppParams>(appParams: T) => void|(IAppBase & T);
+}
+
+declare namespace CktlV3 {
+  interface IPageParams<TPP extends IPageParams<TPP>> {
+    pageName: string;
+    data?: any,
+    onLoad?: IPageBaseLifeCycleQuery<TPP>;
+    onShow?: IPageBaseLifeCycleVoid<TPP>;
+    onReady?: IPageBaseLifeCycleVoid<TPP>;
+    onHide?: IPageBaseLifeCycleVoid<TPP>;
+    onUnload?: IPageBaseLifeCycleVoid<TPP>;
+  }
+
+  interface IPageBase<TPB extends IPageParams<TPB>> extends IPageParams<TPB> {
+    data: any;
+    route: string;
+    setData: (newData: object, renderCallback?: () => void) => void;
+
+    onLoad: IPageBaseLifeCycleQuery<TPB>;
+    onShow: IPageBaseLifeCycleVoid<TPB>;
+    onReady: IPageBaseLifeCycleVoid<TPB>;
+    onHide: IPageBaseLifeCycleVoid<TPB>;
+    onUnload: IPageBaseLifeCycleVoid<TPB>;
+    setTitle: (title: string) => void;
+    
+  }
+
+  interface IDispose {
+    dispose: () => void;
+  }
+  interface IDisposePage<TPB extends IPageBase<TPB>> {
+    dispose: (pageBase: IPageBase<TPB>) => void;
+  }
+
+  
+  type PageLifeCycleParamAny = object;
+  type PageLifeCycleParamQuery = {query: {[""]?:string}};
+
+  type IPageBaseLifeCycleVoid<TPB extends IPageParams<TPB>> = <TPB extends IPageParams<TPB>>(this: IPageBase<TPB>) => void;
+  type IPageBaseLifeCycleQuery<TPB extends IPageParams<TPB>> = <TPB extends IPageParams<TPB>>(this: IPageBase<TPB>, options: PageLifeCycleParamQuery) => void;
+  
+  // type IPageCreator = (pageParams: IPageParams) => void|PageBase;
+  type IPageCreator = <TPP extends IPageParams<TPP>>(appParams: TPP) => void|TPP;
+
+  type PageEvent = {
+    target: object,
+    currentTarget: object,
+  }
+}
+
+declare namespace CktlV3 {
+
+  type ComponentBase = {
+    data: object,
   };
 
-  type AppLifeCycleParamAny = {[key:string]: any};
-  type AppLifeCycleParamQuery = {query: {[""]?:any, [key:string]: any}, [key:string]: any};
-  type AppLifeCycleParamOptions = {query: AppLifeCycleParamQuery, mode: string, path: string, scene?:string, referrerInfo?: {}};
-
-  type IAppParamLifeCycleVoid = () => void;
-  type IAppParamLifeCycleAny = (options: AppLifeCycleParamAny) => void;
-  type IAppParamLifeCycleQuery = (options: AppLifeCycleParamQuery) => void;
-  // type IAppParamLifeCycleOptions = (options: AppLifeCycleParamQuery) => void;
-
-  type IAppBaseLifeCycleVoid = (this: AppBase) => void;
-  type IAppBaseLifeCycleAny = (this: AppBase, options: AppLifeCycleParamAny) => void;
-  type IAppBaseLifeCycleQuery = (this: AppBase, options: AppLifeCycleParamQuery) => void;
-  type IAppBaseLifeCycleOptions = (this: AppBase, options: AppLifeCycleParamOptions) => void;
-
-  type IAppCreator = (appParams: AppParams) => void|AppBase;
-
-  interface PageBaseDefault {
-    pageName: string,
-    data: {[key:string]: any},
-    route: string,
-    onLoad: IPageBaseLifeCycleQuery,
-    onShow: IPageBaseLifeCycleVoid,
-    onReady: IPageBaseLifeCycleVoid,
-    onHide: IPageBaseLifeCycleQuery,
-    onUnload: IPageBaseLifeCycleQuery,
-    setTtile: (title: string) => void,
-    setData: (newData: {[key:string]: any}, renderCallback?: () => void) => void,
+  interface ComponentParamsOption {
+    multipleSlots?: boolean // 在组件定义时的选项中启用多slot支持
   }
 
-  type PageBaseFunction = (this: PageBase, ...args: any[]) => any;
-  interface PageBaseOther {
-    [key: string]: PageBaseFunction|undefined|null
+  interface ComponentParamsLifetimes {
+    created?: (this: ComponentBase) => void;
+    attached?: (this: ComponentBase) => void;
+    deattached?: (this: ComponentBase) => void;
+    ready?: (this: ComponentBase) => void;
   }
-  interface PageParamsOther {
-    [key: string]: PageBaseFunction|string|undefined|null|{[key:string]: any}
+  interface ComponentParamsPageLifetimes {
+    show: (this: ComponentBase) => void;
+    hide: (this: ComponentBase) => void;
+    // resize: (this: ComponentBase, size: any) => void;
   }
-  
-  type PageBase = PageBaseDefault & PageBaseOther;
 
-  type PageParams = {
-    pageName: string,
-    data?: {[key:string]: any},
-    onLoad?: IPageBaseLifeCycleQuery,
-    onShow?: IPageBaseLifeCycleVoid,
-    onReady?: IPageBaseLifeCycleVoid,
-    onHide?: IPageBaseLifeCycleVoid,
-    onUnload?: IPageBaseLifeCycleVoid,
-  } & PageParamsOther;
-
-  type PageLifeCycleParamAny = {[key:string]: any};
-  type PageLifeCycleParamQuery = {query: {[""]?:any}};
-  
-  // type IPageParamLifeCycleVoid = () => void;
-  // type IPageParamLifeCycleQuery = (options: PageLifeCycleParamQuery) => void;
-  // // type IAppParamLifeCycleOptions = (options: AppLifeCycleParamQuery) => void;
-
-  type IPageBaseLifeCycleVoid = (this: PageBase) => void;
-  type IPageBaseLifeCycleQuery = (this: PageBase, options: PageLifeCycleParamQuery) => void;
-  
-  type IPageCreator = (pageParams: PageParams) => void|PageBase;
-
-  type ComponentParams = {
-    options?: {
-      multipleSlots?: boolean // 在组件定义时的选项中启用多slot支持
-    },
+  interface ComponentParams {
     /**
      * 组件的属性列表
      */
-    data?: {[key:string]: {type: any,value?: any}|boolean|string|number},
-    properties?: {[key:string]: {type: any,value?: any}|boolean|string|number},
-    lifetimes?: {
-      created?: (this: ComponentBase) => void,
-      attached?: (this: ComponentBase) => void,
-      deattached?: (this: ComponentBase) => void,
-      ready?: (this: ComponentBase) => void,
-    },
-    pageLifetimes?: {
-      show: (this: ComponentBase) => void,
-      hide: (this: ComponentBase) => void,
-      resize: (this: ComponentBase, size: any) => void,
-    }
-    methods?: {[key:string]: (this: ComponentBase, ...args: any[])=>any}
-    
-  };
-
-  type ComponentBase = {
-    data: {[key:string]: any},
-    //@ts-ignore 1336
-  } & {[key: Exclude<string & keyof any, "data"|"properties">]: (this: ComponentBase, ...args: any[]) => any};
-  
-  type IComponentCreator = (componentParams: ComponentParams) => void|ComponentBase;
-
-  interface IPageMixed {
-    getPrivateData?: (page: PageBase) => object,
-    injectPrivateFunction?: (page: PageBase & PageBaseOther) => void,
-    onPageInit?: (page: PageBase, options?: CktlV3.PageLifeCycleParamQuery) => void,
-    dispose?: (page: PageBase) => void,
+    options?: ComponentParamsOption;
+    data?: any;
+    properties?: any;
+    lifetimes?: ComponentParamsLifetimes,
+    pageLifetimes?: ComponentParamsPageLifetimes,
+    methods?: Record<string, (this: ComponentBase, ...args: object[])=>void>
   }
 
-  type PageMixedClass = new() => IPageMixed;
+}
+declare namespace CktlV3 {
+
+  interface PageBaseWithMixed<TPage extends PageBaseWithMixed<TPage>> extends IPageParams<TPage> {
+    $pageMixedInfo?: PageMixedInfo<TPage>;
+
+    data: any;
+    route: string;
+    setData: (newData: object, renderCallback?: () => void) => void;
+  }
+
+  interface PageMixedInfo<TPage extends IPageParams<TPage>> {
+    $specMixedInstanceArray?: Array<IPageMixed<TPage>>;
+    $mixedInstanceArray?: Array<IPageMixed<TPage>>;
+    $debugRawFunctionMap?: String[];
+    $unloadChecker?: IDispose;
+  }
+
+  type IComponentCreator = (componentParams: ComponentParams) => void|ComponentBase;
+
+  interface PageMixedFunction {
+    name: string;
+    func: (e?: PageEvent) => void;
+  }
+
+  interface IPageMixed<TPage extends IPageParams<TPage>> {
+    getPrivateData?: (page: TPage) => object;
+    getPrivateFunction?:(page: TPage) => Record<string, (e?: CktlV3.PageEvent) => void>;
+    onPageInit?: (page: TPage, options?: CktlV3.PageLifeCycleParamQuery) => void;
+    dispose?: (page: TPage) => void;
+  }
+
+  type PageMixedClass<T extends PageBaseWithMixed<T>> = new() => IPageMixed<T>;
+  type PageMixedCreator<T extends PageBaseWithMixed<T>> = () => IPageMixed<T>;
 
   
 }

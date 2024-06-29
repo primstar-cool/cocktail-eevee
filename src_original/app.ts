@@ -4,9 +4,14 @@ import AppBase from "./cocktail/@union/framework/app_base"
 
 // const EventTriggerOnce = require("./cocktail/@union/event/event_trigger_once");
 // const EventTriggerHolder = require("./cocktail/@union/event/event_trigger_holder");
+interface AppParamsDemo extends CktlV3.IAppParams {
+  globalData: {};
+  abc: number
+}
 
-AppBase({
+AppBase<AppParamsDemo>({
   globalData: {},
+  abc: 111,
   onLaunch() {
 
     require("./cocktail/@union/debug/life_circle_printer_service").setApp(this);

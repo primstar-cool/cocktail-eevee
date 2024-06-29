@@ -1,4 +1,4 @@
-function createMPPage(pageParam: CktlV3.PageParams) {
+function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
 
   console.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
 
@@ -9,7 +9,7 @@ function createMPPage(pageParam: CktlV3.PageParams) {
     pageParam.onShow = basePageOnShow;
   } else {
     pageParam.onShow = (function(oldFunc) {
-      return function(this: CktlV3.PageBase) {
+      return function(this: CktlV3.IPageBase<TPP>) {
         basePageOnShow.call(this);
         oldFunc.call(this);
       };
@@ -20,7 +20,7 @@ function createMPPage(pageParam: CktlV3.PageParams) {
     pageParam.onHide = basePageOnHide;
   } else {
     pageParam.onHide = (function(oldFunc) {
-      return function(this: CktlV3.PageBase) {
+      return function(this: CktlV3.IPageBase<TPP>) {
         basePageOnHide.call(this);
         oldFunc.call(this);
       };
@@ -31,7 +31,7 @@ function createMPPage(pageParam: CktlV3.PageParams) {
     pageParam.onReady = basePageOnReady;
   } else {
     pageParam.onReady = (function(oldFunc) {
-      return function(this: CktlV3.PageBase) {
+      return function(this: CktlV3.IPageBase<TPP>) {
         basePageOnReady.call(this);
         oldFunc.call(this);
       };
@@ -41,7 +41,7 @@ function createMPPage(pageParam: CktlV3.PageParams) {
   
 
   pageParam.onLoad = (function(oldFunc) {
-    return function(this: CktlV3.PageBase, options: CktlV3.PageLifeCycleParamQuery) {
+    return function(this: CktlV3.IPageBase<TPP>, options: CktlV3.PageLifeCycleParamQuery) {
       var app = getApp();
       app.ec.notify(FID.ON_PAGE_LOADING, { pageName: this.pageName, options, page: this });
 
@@ -63,7 +63,7 @@ function createMPPage(pageParam: CktlV3.PageParams) {
   })(pageParam.onLoad);
 
   pageParam.onUnload = (function(oldFunc) {
-    return function(this: CktlV3.PageBase) {
+    return function(this: CktlV3.IPageBase<TPP>) {
       var app = getApp();
       app.ec.notify(FID.ON_PAGE_UNLOADING, { pageName: this.pageName, page: this });
       if (typeof oldFunc === 'function') {
@@ -88,15 +88,15 @@ function createMPPage(pageParam: CktlV3.PageParams) {
     wx.setNavigationBarTitle({title});
   };
 
-  function basePageOnShow(this: CktlV3.PageBase) {
+  function basePageOnShow(this: CktlV3.IPageBase<TPP>) {
     getApp().ec.notify(FID.ON_PAGE_SHOW, { pageName: this.pageName, page: this });
   }
 
-  function basePageOnHide(this: CktlV3.PageBase) {
+  function basePageOnHide(this: CktlV3.IPageBase<TPP>) {
     getApp().ec.notify(FID.ON_PAGE_HIDE, { pageName: this.pageName, page: this });
   }
 
-  function basePageOnReady(this: CktlV3.PageBase) {
+  function basePageOnReady(this: CktlV3.IPageBase<TPP>) {
     getApp().ec.notify(FID.ON_PAGE_READY, { pageName: this.pageName, page: this });
   }
 

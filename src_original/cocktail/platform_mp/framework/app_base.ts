@@ -1,4 +1,4 @@
-module.exports = function createMPApp(appParam: CktlV3.AppParams) {
+module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) {
   
   /*DEBUG_START*/
   require('../../@union/debug/console_extends.js');

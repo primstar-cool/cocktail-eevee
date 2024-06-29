@@ -2,6 +2,22 @@
 
 import { loadMixed, unloadMixed } from "../../cocktail/@union/utils/page_mixed";
 
+//will created on arkTSs
+// interface PageBaseIndex extends CktlV3.PageBaseWithMixed<PageBaseIndex> {
+//   bindViewTap: ()=> void; 
+//   data: {
+//     userInfo: {
+//       avatarUrl: string,
+//       nickName: string,
+//       complex: {
+//         z: number,
+//         a?: {b: number},
+//         c: string
+//       }
+//     }, sharePageData: number
+//   }
+// }
+
 // 获取应用实例
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 // var PageBase: CktlV3.IPageCreator = require("../../cocktail/@union/framework/page_base");
@@ -17,21 +33,23 @@ PageBase({
         z: 2,
         a: {b: 1},
         c: "2"
-      }
+      },
     },
     sharePageData: 2,
-  } as {userInfo: {avatarUrl: string, nickName: string,
-    complex: {
-      z: number,
-      a: {b: number},
-      c: string
-    }
+  } as {
+    userInfo: {
+      avatarUrl: string,
+      nickName: string,
+      complex: {
+        z: number,
+        a?: {b: number},
+        c: string
+      }
+    }, sharePageData: number
+  },
 
 
-  }, sharePageData: number},
-
-
-  onLoad(options) {
+  onLoad(options: CktlV3.PageLifeCycleParamQuery) {
     loadMixed(
       [
         require("./mixed/bottom_text/bottom_text"),

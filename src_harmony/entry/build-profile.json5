@@ -1,6 +1,11 @@
 {
   "apiType": "stageMode",
   "buildOption": {
+    "arkOptions": {
+      "types": [
+        "./../../src_original/cocktail/@compile/@types/event"
+      ]
+    }
   },
   "buildOptionSet": [
     {

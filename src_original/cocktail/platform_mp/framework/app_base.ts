@@ -1,20 +1,21 @@
-module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) {
+import {SystemEvent as FID} from '../../@compile/@enum/system_event'
+
+export = function createMPApp<TAPP extends CktlV3.IAppParams>(appParam: TAPP) {
   
   /*DEBUG_START*/
-  require('../../@union/debug/console_extends.js');
+  require("../../@union/debug/console_extends");
   /*DEBUG_END*/
 
   //阿里小程序 APP是个闭包, my在require里也拿不到, 非常麻烦
   const MPAppCreator = App;
   
-  const {IS_WXMP} = require('../../@complie/target_compile_platform.js');
-  const FID = require('../../@complie/@enum/system_event');
-
+  const {IS_WXMP} = require('../../@compile/target_compile_platform.js');
+           
   if (!appParam.onShow) {
     appParam.onShow = baseAppOnShow;
   } else {
     appParam.onShow = (function(oldFunc) {
-      return function(this: CktlV3.AppBase, options: CktlV3.AppLifeCycleParamQuery):void {
+      return function(this: CktlV3.IAppBase, options: CktlV3.AppLifeCycleParamOptions):void {
         baseAppOnShow.call(this, options);
         oldFunc.call(this, options);
       };
@@ -25,7 +26,7 @@ module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) 
     appParam.onHide = baseAppOnHide;
   } else {
     appParam.onHide = (function(oldFunc) {
-      return function(this: CktlV3.AppBase):void {
+      return function(this: CktlV3.IAppBase):void {
         baseAppOnHide.call(this);
         oldFunc.call(this);
       };
@@ -33,12 +34,14 @@ module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) 
   }
 
   appParam.onLaunch = (function(oldFunc) {
-    return function(this: CktlV3.AppBase, options: CktlV3.AppLifeCycleParamOptions) {
+    return function(this: CktlV3.IAppBase, options: CktlV3.AppLifeCycleParamOptions) {
       this.__service_block__ = {};
 
       //nc的阿里小程序先Page init, 再page_base在此抹平
       if (!this.ec) {
-        this.ec = new (require('../../@union/event/event_center'))('APP_EVENT_CENTER');
+        let EventCenter = require('../../@union/event/event_center').default;
+        // debugger
+        this.ec = new EventCenter('APP_EVENT_CENTER');
       }
 
       if (options) {
@@ -60,7 +63,7 @@ module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) 
     appParam.onError = baseAppOnError;
   } else {
     appParam.onError = (function(oldFunc) {
-      return function(this: CktlV3.AppBase, error: CktlV3.AppLifeCycleParamAny): void {
+      return function(this: CktlV3.IAppBase, error: CktlV3.AppLifeCycleParamAny): void {
         baseAppOnError.call(this, error);
         oldFunc.call(this, error);
       };
@@ -72,24 +75,24 @@ module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) 
     appParam.onPageNotFound = baseAppOnPageNotFound;
   } else {
     appParam.onPageNotFound = (function (oldFunc) {
-      return function (this: CktlV3.AppBase, err: CktlV3.AppLifeCycleParamQuery): void {
+      return function (this: CktlV3.IAppBase, err: CktlV3.AppLifeCycleParamQuery): void {
         baseAppOnPageNotFound.call(this, err);
         oldFunc.call(this, err);
       };
     })(appParam.onPageNotFound);
   }
 
-  function baseAppOnPageNotFound(this: CktlV3.AppBase, res: CktlV3.AppLifeCycleParamQuery) {
+  function baseAppOnPageNotFound(this: CktlV3.IAppBase, res: CktlV3.AppLifeCycleParamQuery) {
     // debugger
     if (IS_WXMP) {
       if (res.query) {
-        delete res.query[""];
+        delete (res as any).query[""];
       }
     }
     this.ec.notify(FID.ON_PAGE_NOT_FOUND, res);
   }
 
-  function baseAppOnShow(this: CktlV3.AppBase, options: CktlV3.AppLifeCycleParamQuery):void {
+  function baseAppOnShow(this: CktlV3.IAppBase, options: CktlV3.AppLifeCycleParamOptions):void {
     if (this.ec) // nc的百度小程序先onShow 再 onLaunch 在此抹平
     {
       if (!options.query) {
@@ -100,11 +103,11 @@ module.exports = function createMPApp<T extends CktlV3.IAppParams>(appParam: T) 
     } 
   }
 
-  function baseAppOnHide(this: CktlV3.AppBase) {
+  function baseAppOnHide(this: CktlV3.IAppBase) {
     this.ec.notify(FID.ON_APP_HIDE);
   }
 
-  function baseAppOnError(this: CktlV3.AppBase, error: CktlV3.AppLifeCycleParamAny): void {
+  function baseAppOnError(this: CktlV3.IAppBase, error: CktlV3.AppLifeCycleParamAny): void {
     console.error(error);
     if (this.ec) {
       this.ec.notify(FID.ON_APP_ERROR, { error });

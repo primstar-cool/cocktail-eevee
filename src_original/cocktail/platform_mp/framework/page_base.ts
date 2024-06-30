@@ -1,8 +1,9 @@
-function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
+import {SystemEvent as FID} from '../../@compile/@enum/system_event'
+
+export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
 
   console.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
 
-  const FID = require('../../@complie/@enum/system_event');
   getApp().ec.notify(FID.ON_PAGE_DATA_PREPARING, pageParam);
 
   if (!pageParam.onShow) {
@@ -105,7 +106,7 @@ function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
   // }
   
   /*DEBUG_START*/
-  const {IS_WXMP, IS_TTMA, IS_SWAN, IS_KSMP, IS_ALIMP} = require("../../@complie/target_compile_platform.js");
+  const {IS_WXMP, IS_TTMA, IS_SWAN, IS_KSMP, IS_ALIMP} = require("../../@compile/target_compile_platform.js");
   IS_WXMP && (pageParam.data && (pageParam.data["IS_" + "WXMP"] = 1));
   IS_TTMA && (pageParam.data && (pageParam.data["IS_" + "TTMA"] = 1));
   IS_SWAN && (pageParam.data && (pageParam.data["IS_" + "SWAN"] = 1));
@@ -117,5 +118,3 @@ function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
 }
 
 
-
-module.exports = createMPPage;

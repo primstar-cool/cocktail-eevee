@@ -1,27 +1,26 @@
 /**
- * @file page_environment.js
+ * @file event_center.js
  * @author lanbei
  * a frame for event notify
  */
+import CktlV3Event from "../../@compile/@types/event"
+import CktlV3 from "../../@compile/@types/debug"
 
-export default class EventCenter implements CktlV3.IEventCenter {
 
-    /*DEBUG_START*/
-    private constructor() {}
-    /*DEBUG_END*/
+export default class EventCenter implements CktlV3Event.IEventCenter {
 
-    private m_dict: { [key: string]: Array<CktlV3.CallbackVO> } | null = {};
+    private m_dict: { [key: string]: Array<CktlV3Event.CallbackVO> } | null = {};
 
-    public notify(evtId: CktlV3.EventID, data: any = undefined, sender: any = undefined): void {
+    public notify(evtId: CktlV3Event.EventID, data: any = undefined, sender: any = undefined): void {
         if (!evtId || !this.m_dict) {
-            console.ASSERT(false, "evtId error:" + evtId);
+            CktlV3.ASSERT(false, "evtId error:" + evtId);
             return;
         }
-        const callBackFuncArray: Array<CktlV3.CallbackVO> = this.m_dict[evtId];
+        const callBackFuncArray: Array<CktlV3Event.CallbackVO> = this.m_dict[evtId];
 
         if (callBackFuncArray) {
             for (var i = 0; i < callBackFuncArray.length; ) {
-                const callBackVO: CktlV3.CallbackVO = callBackFuncArray[i];
+                const callBackVO: CktlV3Event.CallbackVO = callBackFuncArray[i];
                 if (callBackVO) {
                     callBackVO.func(evtId as never, data, sender, callBackVO.refer);
                     if (callBackVO === callBackFuncArray[i]) {
@@ -33,7 +32,7 @@ export default class EventCenter implements CktlV3.IEventCenter {
     }
 
     
-    public register(evtId: CktlV3.EventID, callBackFunc: CktlV3.EventCallback, refer: any = undefined): void {
+    public register(evtId: CktlV3Event.EventID, callBackFunc: CktlV3Event.EventCallback, refer: any = undefined): void {
         /*DEBUG_START*/
         // var stack = new Error().stack.substring(6).trim();
 
@@ -76,7 +75,7 @@ export default class EventCenter implements CktlV3.IEventCenter {
         // /*DEBUG_END*/
 
         if (!evtId || !this.m_dict) {
-            console.ASSERT(false, "evtId error:" + evtId);
+            CktlV3.ASSERT(false, "evtId error:" + evtId);
             return;
         }
 
@@ -88,18 +87,18 @@ export default class EventCenter implements CktlV3.IEventCenter {
     }
 
     
-    public unregister(evtId: CktlV3.EventID, callBackFunc: CktlV3.EventCallback, refer: any = undefined) {
+    public unregister(evtId: CktlV3Event.EventID, callBackFunc: CktlV3Event.EventCallback, refer: any = undefined) {
         if (!evtId || !this.m_dict) {
-            console.ASSERT(false, "evtId error:" + evtId);
+            CktlV3.ASSERT(false, "evtId error:" + evtId);
             return;
         }
 
-        const callBackFuncArray: Array<CktlV3.CallbackVO> = this.m_dict[evtId];
+        const callBackFuncArray: Array<CktlV3Event.CallbackVO> = this.m_dict[evtId];
 
         if (callBackFuncArray) {
             var len = callBackFuncArray.length;
             for (var i = 0; i < len; i++) {
-                const callBackVO: CktlV3.CallbackVO = callBackFuncArray[i];
+                const callBackVO: CktlV3Event.CallbackVO = callBackFuncArray[i];
 
                 if (callBackVO.func === callBackFunc && callBackVO.refer === refer) {
                     callBackFuncArray.splice(i, 1);
@@ -111,7 +110,7 @@ export default class EventCenter implements CktlV3.IEventCenter {
             }
         }
 
-        console.ASSERT(false, "unregister error at eventId:" + evtId);
+        CktlV3.ASSERT(false, "unregister error at eventId:" + evtId);
     }
 
     dispose() {

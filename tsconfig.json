@@ -23,8 +23,9 @@
   },
   "include": [
     "./**/*.ts"
-, "src_original/cocktail/platform_mp/debug/console_extends.js", "src_original/cocktail/@complie/target_compile_platform.js"  ],
+, "src_original/cocktail/platform_mp/debug/console_extends.ts", "src_original/cocktail/@compile/target_compile_platform.js"  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src_harmony"
   ]
 }

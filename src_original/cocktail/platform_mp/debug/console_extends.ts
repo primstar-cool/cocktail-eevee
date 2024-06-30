@@ -1,6 +1,6 @@
 /*DEBUG_START*/
-
-const { IS_BROWSER, IS_TTMA , IS_WXMP, IS_SWAN, IS_ALIMP, IS_KSMP, IS_NODE} = require('../../@complie/target_compile_platform.js');
+//@ts-nocheck
+const { IS_BROWSER, IS_TTMA , IS_WXMP, IS_SWAN, IS_ALIMP, IS_KSMP, IS_NODE} = require('../../@compile/target_compile_platform');
 
 let g;
 IS_WXMP && (g = wx);
@@ -44,3 +44,5 @@ console.LOG = function (...args) {
   consoleLogFunction.apply(console, args);
 };
 /*DEBUG_END*/
+
+export = console;

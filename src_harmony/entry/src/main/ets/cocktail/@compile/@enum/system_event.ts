@@ -1,4 +1,4 @@
-enum SystemEvent {
+export enum SystemEvent {
 
   /**self & all event start on 10000**/
   ON_APP_LAUNCH = 10000,
@@ -132,4 +132,3 @@ enum SystemEvent {
 })();
 /*DEBUG_END*/
 
-export = SystemEvent;

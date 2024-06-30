@@ -6,7 +6,7 @@ declare namespace CktlV3 {
   // <T extends IAnyObject>(options: Options<T>): void
   interface IAppParams {
     // globalData?: any, 
-    onShow?: IAppBaseLifeCycleQuery;
+    onShow?: IAppBaseLifeCycleOptions;
     onLaunch?: IAppBaseLifeCycleOptions;
     onHide?: IAppBaseLifeCycleVoid;
     onError?: IAppBaseLifeCycleAny;
@@ -17,7 +17,7 @@ declare namespace CktlV3 {
 
     __service_block__: Record<string, number>;
     ec: IEventCenter;
-    onShow: IAppBaseLifeCycleQuery;
+    onShow: IAppBaseLifeCycleOptions;
     onLaunch: IAppBaseLifeCycleOptions;
     onPageNotFound: IAppBaseLifeCycleQuery;
     onHide: IAppBaseLifeCycleVoid;
@@ -30,15 +30,21 @@ declare namespace CktlV3 {
 
   type AppLifeCycleParamAny = Record<string, number|string>;
   type AppLifeCycleParamQuery = Record<string, string>;
-  type AppLifeCycleParamOptions = {query: AppLifeCycleParamQuery, mode: string, path: string, scene?:string, referrerInfo?: object};
+  interface AppLifeCycleParamOptions {
+    query: AppLifeCycleParamQuery;
+    mode?: string, path: string;
+    scene?:string;
+    referrerInfo?: object
+  }
 
-
+  
+  type IAppBaseLifeCycleAny = (this: IAppBase, err: AppLifeCycleParamAny) => void;
   type IAppBaseLifeCycleVoid = (this: IAppBase) => void;
-  type IAppBaseLifeCycleAny = (this: IAppBase, options: AppLifeCycleParamAny) => void;
   type IAppBaseLifeCycleQuery = (this: IAppBase, options: AppLifeCycleParamQuery) => void;
   type IAppBaseLifeCycleOptions = (this: IAppBase, options: AppLifeCycleParamOptions) => void;
 
-  type IAppCreator = <T extends CktlV3.IAppParams>(appParams: T) => void|(IAppBase & T);
+  
+  type IAppCreator = <T extends IAppParams>(appParams: T) => void|(IAppBase & T);
 }
 
 declare namespace CktlV3 {
@@ -102,7 +108,7 @@ declare namespace CktlV3 {
   interface ComponentParamsLifetimes {
     created?: (this: ComponentBase) => void;
     attached?: (this: ComponentBase) => void;
-    deattached?: (this: ComponentBase) => void;
+    detached?: (this: ComponentBase) => void;
     ready?: (this: ComponentBase) => void;
   }
   interface ComponentParamsPageLifetimes {
@@ -150,8 +156,8 @@ declare namespace CktlV3 {
 
   interface IPageMixed<TPage extends IPageParams<TPage>> {
     getPrivateData?: (page: TPage) => object;
-    getPrivateFunction?:(page: TPage) => Record<string, (e?: CktlV3.PageEvent) => void>;
-    onPageInit?: (page: TPage, options?: CktlV3.PageLifeCycleParamQuery) => void;
+    getPrivateFunction?:(page: TPage) => Record<string, (e?: PageEvent) => void>;
+    onPageInit?: (page: TPage, options?: PageLifeCycleParamQuery) => void;
     dispose?: (page: TPage) => void;
   }
 

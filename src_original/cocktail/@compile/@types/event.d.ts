@@ -1,6 +1,5 @@
-// import SystemEvent from "../@enum/system_event";
+import {SystemEvent} from "../@enum/system_event";
 
-/// <reference path="../@enum/system_event.ts"/>
 
 declare namespace CktlV3 {
   

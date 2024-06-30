@@ -1,15 +1,15 @@
 /**
  * @since 20180328 16:12
  */
+import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 
-function setApp(app: CktlV3.AppBase):void {
-  const FID = require('../../@complie/@enum/system_event');
+function setApp(app: CktlV3.IAppBase):void {
 
-  Object.keys(FID).forEach((key) => {
-    if (Math.floor(FID[key] / 1000) === 10
-    || Math.floor(FID[key] / 1000) === 20
+  Object.keys(FID as any).forEach((key) => {
+    if (Math.floor((FID as any)[key] / 1000) === 10
+    || Math.floor((FID as any)[key] / 1000) === 20
     ) {
-      app.ec.register(FID[key], handleLifeCircleChange(key));
+      app.ec.register((FID as any)[key], handleLifeCircleChange(key));
     }
   });
 

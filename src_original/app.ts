@@ -12,6 +12,12 @@ interface AppParamsDemo extends CktlV3.IAppParams {
 AppBase<AppParamsDemo>({
   globalData: {},
   abc: 111,
+
+
+  onShow(res) {
+    // debugger
+  },
+
   onLaunch() {
 
     require("./cocktail/@union/debug/life_circle_printer_service").setApp(this);

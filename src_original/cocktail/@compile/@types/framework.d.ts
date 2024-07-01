@@ -1,3 +1,5 @@
+/// <reference path="./event.d.ts" />
+
 declare namespace CktlV3 {
   // type SimpleObject = Record<string, number|string|boolean|null|undefined>
   // type SimpleObjectTree = Record<string, number|string|boolean|null|undefined|SimpleObject>

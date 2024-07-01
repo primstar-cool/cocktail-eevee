@@ -31,7 +31,7 @@ declare namespace CktlV3 {
   };
 
 
-  interface IEventCenter {
+  export interface IEventCenter {
     notify(evtId: EventID, data?: any, sender?: any): void;
     register(evtId: EventID, callBackFunc: EventCallback, refer?: any): void ;
     unregister(evtId: EventID, callBackFunc: EventCallback, refer?: any): void;

@@ -1,11 +1,19 @@
-
+import EventCenter from '../../@common/event/event_center';
+import { IEventCenter } from '../../@compile/@types/event';
 import CktlV3Framework from "../../@compile/@types/framework"
+import CktlV3App from "../../platform_harmony/framework/app_base"
 
-export default CktlV3;
-namespace CktlV3 {
+/*DEBUG_START*/
+import consoleExt from "../debug/console_extends"
+/*DEBUG_END*/
+
+
+export namespace CktlV3 {
 
   export type IAppBase = CktlV3Framework.IAppBase;
   export type IAppParams = CktlV3Framework.IAppParams;
+  export type AppLifeCycleParamQuery = CktlV3Framework.AppLifeCycleParamQuery;
+  export type AppLifeCycleParamAny = CktlV3Framework.AppLifeCycleParamQuery;
 
   export type IPageParams<TPP extends IPageParams<TPP>> = CktlV3Framework.IPageParams<TPP>;
   export type IPageMixed<TPage extends IPageParams<TPage>> = CktlV3Framework.IPageMixed<TPage>;
@@ -20,17 +28,27 @@ namespace CktlV3 {
 
   export type ComponentParams = CktlV3Framework.ComponentParams;
 
-  export let g_app: CktlV3Framework.IAppParams;
+  let $app: CktlV3Framework.IAppParams;
 
   export type AppLifeCycleParamOptions = CktlV3Framework.AppLifeCycleParamOptions;
   export type IAppBaseLifeCycleOptions = CktlV3Framework.IAppBaseLifeCycleOptions;
 
   export function getApp() :CktlV3Framework.IAppParams {
-    return {};
+    return $app;
   }
 
-  export  function ASSERT(flag:boolean|any, ...args: any) :void {
+  export function $setApp(a_app: CktlV3Framework.IAppParams): void{
+    console.ASSERT(!$app, 'error app set')
+    $app = a_app;
+  }
+
+  export function ASSERT(flag:boolean|any, ...args: any) :void {
     console.log(flag + "AAA")
   }
 
+  /*DEBUG_START*/
+  export const console = consoleExt;
+  /*DEBUG_END*/
 }
+
+export default CktlV3;

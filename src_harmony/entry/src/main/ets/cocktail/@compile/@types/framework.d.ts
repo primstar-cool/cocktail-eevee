@@ -15,7 +15,7 @@ declare namespace CktlV3 {
     onPageNotFound?: IAppBaseLifeCycleQuery;
   }
 
-  interface IAppBase extends IAppParams{
+  interface IAppBase extends IAppParams {
 
     __service_block__: Record<string, number>;
     ec: CktlV3Event.IEventCenter;

@@ -4,16 +4,22 @@
  * a frame for event notify
  */
 import CktlV3Event from "../../@compile/@types/event"
-import CktlV3 from "../../@compile/@types/debug"
+import CktlV3 from "../../platform_harmony/core/cktlv3"
+const console = CktlV3.console;
+(console).log("Test Ext console");
+(console).WARN("Test Ext console");
 
 
 export default class EventCenter implements CktlV3Event.IEventCenter {
 
-    private m_dict: { [key: string]: Array<CktlV3Event.CallbackVO> } | null = {};
+    public constructor(private readonly uuid: string) {
+    }
+    
+    private m_dict: Record<string|number, Array<CktlV3Event.CallbackVO>> | null = {};
 
     public notify(evtId: CktlV3Event.EventID, data: any = undefined, sender: any = undefined): void {
         if (!evtId || !this.m_dict) {
-            CktlV3.ASSERT(false, "evtId error:" + evtId);
+            console.ASSERT(false, "evtId error:" + evtId);
             return;
         }
         const callBackFuncArray: Array<CktlV3Event.CallbackVO> = this.m_dict[evtId];
@@ -75,7 +81,7 @@ export default class EventCenter implements CktlV3Event.IEventCenter {
         // /*DEBUG_END*/
 
         if (!evtId || !this.m_dict) {
-            CktlV3.ASSERT(false, "evtId error:" + evtId);
+            console.ASSERT(false, "evtId error:" + evtId);
             return;
         }
 
@@ -89,7 +95,7 @@ export default class EventCenter implements CktlV3Event.IEventCenter {
     
     public unregister(evtId: CktlV3Event.EventID, callBackFunc: CktlV3Event.EventCallback, refer: any = undefined) {
         if (!evtId || !this.m_dict) {
-            CktlV3.ASSERT(false, "evtId error:" + evtId);
+            console.ASSERT(false, "evtId error:" + evtId);
             return;
         }
 
@@ -110,7 +116,7 @@ export default class EventCenter implements CktlV3Event.IEventCenter {
             }
         }
 
-        CktlV3.ASSERT(false, "unregister error at eventId:" + evtId);
+        console.ASSERT(false, "unregister error at eventId:" + evtId);
     }
 
     dispose() {

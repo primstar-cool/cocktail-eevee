@@ -1,126 +1,64 @@
 
-import CktlV3 from "../core/cktlv3"
+import CktlV3Framework from "../../@compile/@types/framework"
+import CktlV3Event from "../../@compile/@types/event"
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
+import EventCenter from '../../@common/event/event_center';
+import CktlV3 from "../core/cktlv3"
 
-// namespace CktlV3 {
-//   function getApp(): CktlV3Framework.IAppParams {
-//     debugger
-//     return g_app!;
-//   }
-// }
+export class CAppBase implements CktlV3Framework.IAppBase {
+  readonly __service_block__: Record<string, number>;
+  public ec: CktlV3Event.IEventCenter;
+  public onShow: CktlV3Framework.IAppBaseLifeCycleOptions;
+  public onLaunch: CktlV3Framework.IAppBaseLifeCycleOptions;
+  public onPageNotFound: CktlV3Framework.IAppBaseLifeCycleQuery;
+  public onHide: CktlV3Framework.IAppBaseLifeCycleVoid;
+  public onError: CktlV3Framework.IAppBaseLifeCycleAny;
 
-export default function createMPApp<T extends CktlV3.IAppParams>(appParam: T) {
+  // private readonly appParams: CktlV3Framework.IAppParams;
 
+  constructor(protected readonly appParams: CktlV3Framework.IAppParams) {
+    this.__service_block__ = {};
+    this.ec = new EventCenter('APP_EVENT_CENTER');
+
+    this.onShow = (options: CktlV3Framework.AppLifeCycleParamOptions) => {
+      this.ec.notify(FID.ON_APP_SHOW, { options });
+      if (this.appParams.onShow) this.appParams.onShow.call(this, options);
+    }
+
+    this.onLaunch = (options: CktlV3Framework.AppLifeCycleParamOptions) => {
+      if (this.appParams.onLaunch) this.appParams.onLaunch.call(this, options);
+      this.ec.notify(FID.ON_APP_LAUNCH, { options });
+    }
+    this.onHide = () => {
+      this.ec.notify(FID.ON_APP_HIDE);
+      if (this.appParams.onHide) this.appParams.onHide.call(this);
+    }
+    this.onError = (error: CktlV3Framework.AppLifeCycleParamAny) => {
+      this.ec.notify(FID.ON_APP_ERROR, { error: error });
+      if (this.appParams.onError) this.appParams.onError.call(this);
+    }
+    this.onPageNotFound = (options: CktlV3Framework.AppLifeCycleParamQuery) => {
+      this.ec.notify(FID.ON_PAGE_NOT_FOUND, { options });
+      if (this.appParams.onPageNotFound) this.appParams.onPageNotFound.call(this, options);
+    }
+  }
+}
+
+
+type AppBaseCreator<TAP extends CktlV3Framework.IAppParams> = (param: TAP) => CktlV3Framework.IAppBase;
+
+export default function createMPApp<TAP extends CktlV3Framework.IAppParams>(appCreator: AppBaseCreator<TAP> , appParam: TAP) {
 
   /*DEBUG_START*/
   // require('../../@union/debug/console_extends.js');
   /*DEBUG_END*/
 
-  //阿里小程序 APP是个闭包, my在require里也拿不到, 非常麻烦
+  let app: CktlV3Framework.IAppBase = appCreator(appParam);
+  CktlV3.$setApp(app);
 
-
-  // if (!appParam.onShow) {
-  //   appParam.onShow = baseAppOnShow;
-  // } else {
-  //   appParam.onShow = (function(oldFunc) {
-  //     return function(this: CktlV3.IAppBase, options: CktlV3.AppLifeCycleParamOptions):void {
-  //       baseAppOnShow.call(this, options);
-  //       oldFunc.call(this, options);
-  //     };
-  //   })(appParam.onShow);
-  // }
-  //
-  // if (!appParam.onHide) {
-  //   appParam.onHide = baseAppOnHide;
-  // } else {
-  //   appParam.onHide = (function(oldFunc) {
-  //     return function(this: CktlV3.IAppBase):void {
-  //       baseAppOnHide.call(this);
-  //       oldFunc.call(this);
-  //     };
-  //   })(appParam.onHide);
-  // }
-  //
-  // appParam.onLaunch = (function(oldFunc) {
-  //   return function(this: CktlV3.IAppBase, options: CktlV3.AppLifeCycleParamOptions) {
-  //     this.__service_block__ = {};
-  //
-  //     //nc的阿里小程序先Page init, 再page_base在此抹平
-  //     if (!this.ec) {
-  //       this.ec = new (require('../../@union/event/event_center'))('APP_EVENT_CENTER');
-  //     }
-  //
-  //     if (options) {
-  //       if (typeof oldFunc === 'function') {
-  //         oldFunc.call(this, options);
-  //       }
-  //
-  //       this.ec.notify(FID.ON_APP_LAUNCH, { options });
-  //
-  //       //百度小程序已对齐
-  //       // if (typeof swan !== 'undefined') {
-  //       //   this.onShow(options); //nc的百度小程序先onShow 再 onLaunch 在此抹平
-  //       // }
-  //     }
-  //   };
-  // })(appParam.onLaunch);
-  //
-  // if (!appParam.onError) {
-  //   appParam.onError = baseAppOnError;
-  // } else {
-  //   appParam.onError = (function(oldFunc) {
-  //     return function(this: CktlV3.IAppBase, error: CktlV3.AppLifeCycleParamAny): void {
-  //       baseAppOnError.call(this, error);
-  //       oldFunc.call(this, error);
-  //     };
-  //   })(appParam.onError);
-  // }
-  //
-  //
-  // if (!appParam.onPageNotFound) {
-  //   appParam.onPageNotFound = baseAppOnPageNotFound;
-  // } else {
-  //   appParam.onPageNotFound = (function (oldFunc) {
-  //     return function (this: CktlV3.IAppBase, err: CktlV3.AppLifeCycleParamQuery): void {
-  //       baseAppOnPageNotFound.call(this, err);
-  //       oldFunc.call(this, err);
-  //     };
-  //   })(appParam.onPageNotFound);
-  // }
-  //
-  // function baseAppOnPageNotFound(this: CktlV3.IAppBase, res: CktlV3.AppLifeCycleParamQuery) {
-  //   // debugger
-  //   if (IS_WXMP) {
-  //     if (res.query) {
-  //       delete (res as any).query[""];
-  //     }
-  //   }
-  //   this.ec.notify(FID.ON_PAGE_NOT_FOUND, res);
-  // }
-  //
-  // function baseAppOnShow(this: CktlV3.IAppBase, options: CktlV3.AppLifeCycleParamOptions):void {
-  //   if (this.ec) // nc的百度小程序先onShow 再 onLaunch 在此抹平
-  //   {
-  //     if (!options.query) {
-  //       console.ASSERT(typeof tt !== 'undefined');
-  //       (options as any).query = {};
-  //     }
-  //     this.ec.notify(FID.ON_APP_SHOW, { options });
-  //   }
-  // }
-  //
-  // function baseAppOnHide(this: CktlV3.IAppBase) {
-  //   this.ec.notify(FID.ON_APP_HIDE);
-  // }
-  //
-  // function baseAppOnError(this: CktlV3.IAppBase, error: CktlV3.AppLifeCycleParamAny): void {
-  //   console.error(error);
-  //   if (this.ec) {
-  //     this.ec.notify(FID.ON_APP_ERROR, { error });
-  //   }
-  // }
-  // MPAppCreator(appParam as any);
-
-  // CktlV3.g_app = appParam;
+  app.onLaunch({
+    query: {},
+    path: '',
+  });
 
 };

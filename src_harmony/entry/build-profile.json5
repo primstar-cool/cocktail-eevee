@@ -3,7 +3,8 @@
   "buildOption": {
     "arkOptions": {
       "types": [
-        "./../../src_original/cocktail/@compile/@types/event"
+        "./../../src_original/cocktail/@compile/@types/event",
+        "./../../src_original/cocktail/@compile/@types/framework"
       ]
     }
   },

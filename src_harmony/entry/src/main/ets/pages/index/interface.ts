@@ -21,15 +21,7 @@ export interface PageBase_index extends CktlV3.PageBaseWithMixed<PageBase_index>
 
   bindViewTap: () => void;
   data: {
-    userInfo: {
-      avatarUrl: string;
-      nickName: string;
-      complex: {
-        z: number;
-        a?: { b: number; };
-        c: string;
-      };
-    };
+    userInfo: GenInterface_index_userInfo;
     sharePageData: number;
   }
 }// index.ts

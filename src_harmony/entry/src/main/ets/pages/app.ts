@@ -34,9 +34,9 @@ AppBase<IAppParamsDemo>(
     },
 
     onLaunch() {
-
+      console.log("IAppParamsDemo onLaunch");
     },
   }
 );
 
-export default {};//CktlV3.getApp();
+export default CktlV3.getApp();

@@ -17,7 +17,9 @@ declare namespace CktlV3 {
 
   interface IAppBase extends IAppParams {
 
+    $regNextPageRoute: (pageName: string) => void;
     __service_block__: Record<string, number>;
+
     ec: CktlV3Event.IEventCenter;
     onShow: IAppBaseLifeCycleOptions;
     onLaunch: IAppBaseLifeCycleOptions;

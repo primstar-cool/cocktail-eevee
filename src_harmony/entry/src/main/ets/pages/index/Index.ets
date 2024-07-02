@@ -4,26 +4,14 @@ import { getPageContent } from './PageBase_index';
 // require("./pageIndex/index");
 // const pageFrame = globalThis.recentPageFrame;
 
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
-
-
 @Entry
 @Component
 struct Index {
 
   private pageContent: PageBase_index = getPageContent();
 
-  @State message: string = 'Hello World';
-  @State userInfo: GenInterface_index_userInfo =  {
-    avatarUrl: defaultAvatarUrl,
-    nickName: '',
-    complex: {
-      z: 2,
-      a: {b: 2221},
-      c: "2"
-    }
-  }; /* define in page.data*/
-  @State sharePageData: number = 2;//this.pageContent.data.sharePageData;
+  @State userInfo: GenInterface_index_userInfo = this.pageContent.data.userInfo; /* define in page.data*/
+  @State sharePageData: number = this.pageContent.data.sharePageData;
   @State text: string = "Hello World";
 
   build() {
@@ -42,19 +30,6 @@ struct Index {
       .id("index-container")
       .height("100%")
     }
-
-    // RelativeContainer() {
-    //   Text(this.message + pageFrame.vvv)
-    //     .id('HelloWorld')
-    //     .fontSize(50 )
-    //     .fontWeight(FontWeight.Bold)
-    //     .alignRules({
-    //       center: { anchor: '__container__', align: VerticalAlign.Center },
-    //       middle: { anchor: '__container__', align: HorizontalAlign.Center }
-    //     })
-    // }
-    // .height('100%')
-    // .width('100%')
   }
 
 }

@@ -28,16 +28,16 @@ export namespace CktlV3 {
 
   export type ComponentParams = CktlV3Framework.ComponentParams;
 
-  let $app: CktlV3Framework.IAppParams;
+  let $app: CktlV3Framework.IAppBase;
 
   export type AppLifeCycleParamOptions = CktlV3Framework.AppLifeCycleParamOptions;
   export type IAppBaseLifeCycleOptions = CktlV3Framework.IAppBaseLifeCycleOptions;
 
-  export function getApp() :CktlV3Framework.IAppParams {
+  export function getApp() :CktlV3Framework.IAppBase {
     return $app;
   }
 
-  export function $setApp(a_app: CktlV3Framework.IAppParams): void{
+  export function $setApp(a_app: CktlV3Framework.IAppBase): void{
     console.ASSERT(!$app, 'error app set')
     $app = a_app;
   }

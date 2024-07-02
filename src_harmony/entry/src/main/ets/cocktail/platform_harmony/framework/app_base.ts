@@ -14,6 +14,9 @@ export class CAppBase implements CktlV3Framework.IAppBase {
   public onHide: CktlV3Framework.IAppBaseLifeCycleVoid;
   public onError: CktlV3Framework.IAppBaseLifeCycleAny;
 
+  public $regNextPageRoute(pageRoute: string): void {
+    console.log("reg next page route: " + pageRoute);
+  }
   // private readonly appParams: CktlV3Framework.IAppParams;
 
   constructor(protected readonly appParams: CktlV3Framework.IAppParams) {

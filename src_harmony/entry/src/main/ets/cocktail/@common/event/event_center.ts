@@ -5,9 +5,7 @@
  */
 import CktlV3Event from "../../@compile/@types/event"
 import CktlV3 from "../../platform_harmony/core/cktlv3"
-const console = CktlV3.console;
-(console).log("Test Ext console");
-(console).WARN("Test Ext console");
+const console = CktlV3.console; // add by cocktail convertor
 
 
 export default class EventCenter implements CktlV3Event.IEventCenter {

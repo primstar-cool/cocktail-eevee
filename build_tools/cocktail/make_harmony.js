@@ -78,7 +78,31 @@ pagePaths.forEach(
             }
 
             debugger
-            
+            let interfaceLoop1 = ((destFileDict[`${pageName}.interface.seg.ets`] || '').match(
+                new RegExp(`interface GenInterface_${pageName}_[a-zA-Z0-9]+[\\s]+`, "g")
+            ) || []).map(v => v.substr(10).trim() + ", ")
+            // debugger
+            let exportPath = path.join(srcRootPath, `../src_harmony/entry/src/main/ets/pages/${pageName}`);
+let template = 
+`import { ${interfaceLoop1.join("")}PageBase_${pageName} } from './interface';
+import { getPageContent } from './PageBase_${pageName}';
+
+@Entry
+@Component
+struct ${pageName[0].toUpperCase() + pageName.substr(1)} {
+
+  private pageContent: PageBase_${pageName} = getPageContent();
+
+  ${destFileDict[`${pageName}.state.seg.ets`].replace(/\n/g, "\n  ")}
+
+  build() {
+    ${destFileDict[`${pageName}.build.seg.ets`].replace(/\n/g, "\n    ")}
+  }
+}\n`;
+
+debugger
+
+            fs.writeFileSync(exportPath + `/${pageName}.ets`, template, 'utf8');
 
         }
     }

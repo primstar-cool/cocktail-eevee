@@ -131,7 +131,7 @@ module.exports = function (
                                     "scope": "@CONTEXT__",
                                     "kind": "let",
                                     "type": v2.children[1].text.trim(),
-                                    "code": codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                                    "code": `this.pageContent.data.${propertyName}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
                                     "comment": `define in page.data`,
 
                                 }
@@ -224,7 +224,7 @@ module.exports = function (
                                                         "scope": "@CONTEXT__",
                                                         "kind": "let",
                                                         "type": v2.children[1].text.trim(),
-                                                        "code": codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                                                        "code": `this.pageContent.data.${propertyName}`,//codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
                                                         "comment": `define mixed ${v.substr(v.lastIndexOf("/") + 1)}`,
                                                     }
                                                 );

@@ -1,3 +1,5 @@
+import CktlV3 from "../../@union/core/cktlv3"; // add by cocktail convertor
+const console = CktlV3.console; // add by cocktail convertor
 /**
  * @file event_center.js
  * @author lanbei

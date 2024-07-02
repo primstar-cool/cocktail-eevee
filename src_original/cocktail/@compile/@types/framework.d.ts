@@ -1,13 +1,13 @@
-/// <reference path="./event.d.ts" />
+
+import CktlV3Event from "./event";
 
 declare namespace CktlV3 {
   // type SimpleObject = Record<string, number|string|boolean|null|undefined>
   // type SimpleObjectTree = Record<string, number|string|boolean|null|undefined|SimpleObject>
 
-
   // <T extends IAnyObject>(options: Options<T>): void
-  interface IAppParams {
-    // globalData?: any, 
+  export interface IAppParams {
+    // globalData?: any,
     onShow?: IAppBaseLifeCycleOptions;
     onLaunch?: IAppBaseLifeCycleOptions;
     onHide?: IAppBaseLifeCycleVoid;
@@ -15,10 +15,12 @@ declare namespace CktlV3 {
     onPageNotFound?: IAppBaseLifeCycleQuery;
   }
 
-  interface IAppBase extends IAppParams{
+  interface IAppBase extends IAppParams {
 
+    $regNextPageRoute: (pageName: string) => void;
     __service_block__: Record<string, number>;
-    ec: IEventCenter;
+
+    ec: CktlV3Event.IEventCenter;
     onShow: IAppBaseLifeCycleOptions;
     onLaunch: IAppBaseLifeCycleOptions;
     onPageNotFound: IAppBaseLifeCycleQuery;
@@ -26,7 +28,7 @@ declare namespace CktlV3 {
     onError: IAppBaseLifeCycleAny;
   }
 
-  
+
 
   // interface AppParams extends AppParamsDefault {}
 
@@ -39,14 +41,17 @@ declare namespace CktlV3 {
     referrerInfo?: object
   }
 
-  
+
   type IAppBaseLifeCycleAny = (this: IAppBase, err: AppLifeCycleParamAny) => void;
   type IAppBaseLifeCycleVoid = (this: IAppBase) => void;
   type IAppBaseLifeCycleQuery = (this: IAppBase, options: AppLifeCycleParamQuery) => void;
   type IAppBaseLifeCycleOptions = (this: IAppBase, options: AppLifeCycleParamOptions) => void;
 
-  
+
   type IAppCreator = <T extends IAppParams>(appParams: T) => void|(IAppBase & T);
+
+  function getApp() :IAppBase;
+
 }
 
 declare namespace CktlV3 {
@@ -71,7 +76,7 @@ declare namespace CktlV3 {
     onHide: IPageBaseLifeCycleVoid<TPB>;
     onUnload: IPageBaseLifeCycleVoid<TPB>;
     setTitle: (title: string) => void;
-    
+
   }
 
   interface IDispose {
@@ -81,17 +86,17 @@ declare namespace CktlV3 {
     dispose: (pageBase: IPageBase<TPB>) => void;
   }
 
-  
+
   type PageLifeCycleParamAny = object;
   type PageLifeCycleParamQuery = {query: {[""]?:string}};
 
   type IPageBaseLifeCycleVoid<TPB extends IPageParams<TPB>> = <TPB extends IPageParams<TPB>>(this: IPageBase<TPB>) => void;
   type IPageBaseLifeCycleQuery<TPB extends IPageParams<TPB>> = <TPB extends IPageParams<TPB>>(this: IPageBase<TPB>, options: PageLifeCycleParamQuery) => void;
-  
+
   // type IPageCreator = (pageParams: IPageParams) => void|PageBase;
   type IPageCreator = <TPP extends IPageParams<TPP>>(appParams: TPP) => void|TPP;
 
-  type PageEvent = {
+  interface PageEvent {
     target: object,
     currentTarget: object,
   }
@@ -136,10 +141,9 @@ declare namespace CktlV3 {
 
   interface PageBaseWithMixed<TPage extends PageBaseWithMixed<TPage>> extends IPageParams<TPage> {
     $pageMixedInfo?: PageMixedInfo<TPage>;
-
     data: any;
-    route: string;
-    setData: (newData: object, renderCallback?: () => void) => void;
+    route?: string;
+    setData?: (newData: object, renderCallback?: () => void) => void;
   }
 
   interface PageMixedInfo<TPage extends IPageParams<TPage>> {
@@ -166,5 +170,8 @@ declare namespace CktlV3 {
   type PageMixedClass<T extends PageBaseWithMixed<T>> = new() => IPageMixed<T>;
   type PageMixedCreator<T extends PageBaseWithMixed<T>> = () => IPageMixed<T>;
 
-  
+
+
 }
+
+export = CktlV3;

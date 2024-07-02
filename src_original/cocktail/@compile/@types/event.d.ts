@@ -1,5 +1,5 @@
+import EventTriggerHolder from "../../@common/event/event_trigger_holder";
 import {SystemEvent} from "../@enum/system_event";
-
 
 declare namespace CktlV3 {
   
@@ -31,10 +31,17 @@ declare namespace CktlV3 {
   };
 
 
-  export interface IEventCenter {
+  interface IEventCenter {
     notify(evtId: EventID, data?: any, sender?: any): void;
     register(evtId: EventID, callBackFunc: EventCallback, refer?: any): void ;
     unregister(evtId: EventID, callBackFunc: EventCallback, refer?: any): void;
   }
 
+  interface EventTriggerHolderRefer {
+    refer: object;
+    self: EventTriggerHolder;
+  }
+
 }
+
+export = CktlV3;

@@ -96,10 +96,16 @@ declare namespace CktlV3 {
   // type IPageCreator = (pageParams: IPageParams) => void|PageBase;
   type IPageCreator = <TPP extends IPageParams<TPP>>(appParams: TPP) => void|TPP;
 
-  interface PageEvent {
-    target: object,
-    currentTarget: object,
+  interface PageEventTarget {
+    dataset: Record<string, number|string|object|boolean>
   }
+
+  interface PageEvent {
+    target: PageEventTarget,
+    currentTarget: PageEventTarget,
+  }
+
+  type PageEventMethod = ((e?: CktlV3.PageEvent) => void)|(() => void);
 }
 
 declare namespace CktlV3 {
@@ -136,14 +142,15 @@ declare namespace CktlV3 {
     methods?: Record<string, (this: ComponentBase, ...args: object[])=>void>
   }
 
+  type IComponentRegister = (componentParams: ComponentParams) => void|ComponentBase
+  type IComponentRegisterWithName = (componentName: string, componentParams: ComponentParams) => void|ComponentBase
+
+
 }
 declare namespace CktlV3 {
 
-  interface PageBaseWithMixed<TPage extends PageBaseWithMixed<TPage>> extends IPageParams<TPage> {
+  interface IPageBaseWithMixed<TPage extends IPageBaseWithMixed<TPage>> extends IPageParams<TPage> {
     $pageMixedInfo?: PageMixedInfo<TPage>;
-    data: any;
-    route?: string;
-    setData?: (newData: object, renderCallback?: () => void) => void;
   }
 
   interface PageMixedInfo<TPage extends IPageParams<TPage>> {
@@ -155,10 +162,10 @@ declare namespace CktlV3 {
 
   type IComponentCreator = (componentParams: ComponentParams) => void|ComponentBase;
 
-  // interface PageMixedFunction {
-  //   name: string;
-  //   func: (e?: PageEvent) => void;
-  // }
+  interface PageMixedFunction {
+    name: string;
+    func: (e?: PageEvent) => void;
+  }
 
   interface IPageMixed<TPage extends IPageParams<TPage>> {
     getPrivateData?: (page: TPage) => object;
@@ -167,8 +174,8 @@ declare namespace CktlV3 {
     dispose?: (page: TPage) => void;
   }
 
-  type PageMixedClass<T extends PageBaseWithMixed<T>> = new() => IPageMixed<T>;
-  type PageMixedCreator<T extends PageBaseWithMixed<T>> = () => IPageMixed<T>;
+  type PageMixedClass<T extends IPageBaseWithMixed<T>> = new() => IPageMixed<T>;
+  type PageMixedCreator<T extends IPageBaseWithMixed<T>> = () => IPageMixed<T>;
 
 
 

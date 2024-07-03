@@ -37,11 +37,10 @@ declare namespace CktlV3 {
     unregister(evtId: EventID, callBackFunc: EventCallback, refer?: any): void;
   }
 
-  interface EventTriggerHolderRefer {
+  export interface EventTriggerHolderRefer {
     refer: object;
     self: EventTriggerHolder;
   }
-
 }
 
 export = CktlV3;

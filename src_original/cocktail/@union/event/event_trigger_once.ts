@@ -1,1 +1,2 @@
-export = require("../../@common/event/event_trigger_once");
+import EventTriggerOnce from "../../@common/event/event_trigger_once";
+export default EventTriggerOnce; 

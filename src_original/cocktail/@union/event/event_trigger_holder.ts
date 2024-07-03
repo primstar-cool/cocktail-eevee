@@ -1,1 +1,2 @@
-export = require("../../@common/event/event_trigger_holder");
+import EventTriggerHolder from "../../@common/event/event_trigger_holder";
+export default EventTriggerHolder;

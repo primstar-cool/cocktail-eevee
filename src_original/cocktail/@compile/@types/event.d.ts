@@ -1,4 +1,4 @@
-import EventTriggerHolder from "../../@common/event/event_trigger_holder";
+import EventTriggerHolder from "../../@union/event/event_trigger_holder";
 import {SystemEvent} from "../@enum/system_event";
 
 declare namespace CktlV3 {

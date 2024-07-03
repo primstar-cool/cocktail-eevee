@@ -1,1 +1,2 @@
-export = require("../../@common/event/event_center");
+import EventCenter from "../../@common/event/event_center";
+export default EventCenter;

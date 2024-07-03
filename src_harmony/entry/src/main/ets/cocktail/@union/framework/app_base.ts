@@ -2,7 +2,7 @@
 import CktlV3Framework from "../../@compile/@types/framework"
 import CktlV3Event from "../../@compile/@types/event"
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
-import EventCenter from '../../@common/event/event_center';
+import EventCenter from '../../@union/event/event_center';
 import CktlV3 from "../core/cktlv3"
 
 export class CAppBase implements CktlV3Framework.IAppBase {

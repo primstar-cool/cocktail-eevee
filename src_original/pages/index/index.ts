@@ -1,4 +1,5 @@
 import { loadMixed, unloadMixed } from "../../cocktail/@union/utils/page_mixed";
+import CktlV3 from "../../cocktail/@union/core/cktlv3"
 
 // 获取应用实例
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'

@@ -1,4 +1,4 @@
-import { PageBase_logs } from './interface';
+import { GenInterface_logs_pageData, PageBase_logs } from './interface';
 import { getPageContent } from './PageBase_logs';
 
 @Entry

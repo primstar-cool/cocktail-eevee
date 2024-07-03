@@ -23,6 +23,7 @@ export namespace CktlV3 {
   export type PageLifeCycleParamQuery = CktlV3Framework.PageLifeCycleParamQuery;
   export type PageEvent = CktlV3Framework.PageEvent;
   export type PageMixedInfo = CktlV3Framework.PageMixedInfo;
+  export type PageEventMethod = CktlV3Framework.PageEventMethod;
 
 
 

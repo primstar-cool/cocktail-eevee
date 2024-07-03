@@ -92,7 +92,7 @@ declare namespace CktlV3 {
   type IPageBaseLifeCycleVoid = (this: IPageBase) => void;
   type IPageBaseLifeCycleQuery = (this: IPageBase, options: PageLifeCycleParamQuery) => void;
 
-  type IPageCreator = (pageParams: IPageParams) => void|IPageBase;
+  type IPageCreator = <T extends IPageParams>(pageParams: IPageParams & T) => void|IPageBase;
 
   interface PageEventTarget {
     dataset: Record<string, number|string|object|boolean>
@@ -166,10 +166,10 @@ declare namespace CktlV3 {
   }
 
   interface IPageMixed {
-    getPrivateData?: (page: IPageParams) => object;
-    getPrivateFunction?:(page: IPageParams) => Record<string, undefined|PageEventMethod>;
-    onPageInit?: (page: IPageParams, options?: PageLifeCycleParamQuery) => void;
-    dispose?: (page: IPageParams) => void;
+    getPrivateData?: (page: IPageBaseWithMixed) => object;
+    getPrivateFunction?:(page: IPageBaseWithMixed & IPageBase) => Record<string, undefined|PageEventMethod>;
+    onPageInit?: (page: IPageBaseWithMixed & IPageBase, options?: PageLifeCycleParamQuery) => void;
+    dispose?: (page: IPageBaseWithMixed) => void;
   }
 
   type PageMixedClass = new() => IPageMixed;

@@ -74,7 +74,7 @@ export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator>, page:
       Object.assign(privateDataCache!, privateData);
     }
   });
-  page.setData(privateDataCache);
+  // page.setData(privateDataCache);
   privateDataCache = undefined;
 
   /*DEBUG_START*/
@@ -100,7 +100,7 @@ export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator>, page:
 
 
 
-      let funcs: Record<string, (e?: CktlV3.PageEvent) => void> = ins.getPrivateFunction(page);
+      let funcs: Record<string, undefined|CktlV3.PageEventMethod> = ins.getPrivateFunction(page);
 
       for (let key in funcs) {
         console.ASSERT(funcs[key] && !functionMap[key], 'conflict function ' + key);
@@ -172,10 +172,9 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage
 };
 
 
-export function forEachMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage, callback: () => void) {
+export function forEachMixed(page: CktlV3.IPageBaseWithMixed, callback: () => void) {
 
   if (page && page.$pageMixedInfo?.$mixedInstanceArray && callback) {
     page.$pageMixedInfo.$mixedInstanceArray.forEach(callback);
   }
-
 }

@@ -1,7 +1,7 @@
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 import CktlV3 from "../../@compile/@types/framework"
 
-export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
+export = function createMPPage(pageParam: CktlV3.IPageParams) {
 
   console.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
 
@@ -11,7 +11,7 @@ export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: T
     pageParam.onShow = basePageOnShow;
   } else {
     pageParam.onShow = (function(oldFunc) {
-      return function(this: CktlV3.IPageBase<TPP>) {
+      return function(this: CktlV3.IPageBase) {
         basePageOnShow.call(this);
         oldFunc.call(this);
       };
@@ -22,7 +22,7 @@ export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: T
     pageParam.onHide = basePageOnHide;
   } else {
     pageParam.onHide = (function(oldFunc) {
-      return function(this: CktlV3.IPageBase<TPP>) {
+      return function(this: CktlV3.IPageBase) {
         basePageOnHide.call(this);
         oldFunc.call(this);
       };
@@ -33,7 +33,7 @@ export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: T
     pageParam.onReady = basePageOnReady;
   } else {
     pageParam.onReady = (function(oldFunc) {
-      return function(this: CktlV3.IPageBase<TPP>) {
+      return function(this: CktlV3.IPageBase) {
         basePageOnReady.call(this);
         oldFunc.call(this);
       };
@@ -43,7 +43,7 @@ export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: T
   
 
   pageParam.onLoad = (function(oldFunc) {
-    return function(this: CktlV3.IPageBase<TPP>, options: CktlV3.PageLifeCycleParamQuery) {
+    return function(this: CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
       var app = getApp();
       app.ec.notify(FID.ON_PAGE_LOADING, { pageName: this.pageName, options, page: this });
 
@@ -65,7 +65,7 @@ export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: T
   })(pageParam.onLoad);
 
   pageParam.onUnload = (function(oldFunc) {
-    return function(this: CktlV3.IPageBase<TPP>) {
+    return function(this: CktlV3.IPageBase) {
       var app = getApp();
       app.ec.notify(FID.ON_PAGE_UNLOADING, { pageName: this.pageName, page: this });
       if (typeof oldFunc === 'function') {
@@ -90,15 +90,15 @@ export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: T
     wx.setNavigationBarTitle({title});
   };
 
-  function basePageOnShow(this: CktlV3.IPageBase<TPP>) {
+  function basePageOnShow(this: CktlV3.IPageBase) {
     getApp().ec.notify(FID.ON_PAGE_SHOW, { pageName: this.pageName, page: this });
   }
 
-  function basePageOnHide(this: CktlV3.IPageBase<TPP>) {
+  function basePageOnHide(this: CktlV3.IPageBase) {
     getApp().ec.notify(FID.ON_PAGE_HIDE, { pageName: this.pageName, page: this });
   }
 
-  function basePageOnReady(this: CktlV3.IPageBase<TPP>) {
+  function basePageOnReady(this: CktlV3.IPageBase) {
     getApp().ec.notify(FID.ON_PAGE_READY, { pageName: this.pageName, page: this });
   }
 

@@ -92,7 +92,7 @@ declare namespace CktlV3 {
   type IPageBaseLifeCycleVoid = (this: IPageBase) => void;
   type IPageBaseLifeCycleQuery = (this: IPageBase, options: PageLifeCycleParamQuery) => void;
 
-  type IPageCreator = (pageParams: IPageParams) => void|IPageBase;
+  type IPageCreator = <T extends IPageParams>(pageParams: IPageParams & T) => void|IPageBase;
 
   interface PageEventTarget {
     dataset: Record<string, number|string|object|boolean>

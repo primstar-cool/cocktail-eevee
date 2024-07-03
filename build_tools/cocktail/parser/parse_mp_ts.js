@@ -169,7 +169,7 @@ module.exports = function (
                     "onLoad", "onUnload", "onShow"
                 ].includes(identifier)) return;
                 
-                debugger
+                // debugger
                 let params = v.children.filter(vv => vv.type === 'Parameter');
 
                 let ret = v.children.filter(vv => vv.type !== 'Parameter' && vv.type !== 'Identifier' && vv.type !== 'Block')
@@ -190,7 +190,7 @@ module.exports = function (
                         "scope": "@CONTEXT__",
                         "kind": "const",
                         "type": `(${paramsStringWithType}) => ${ret[0].text.trim()}`,
-                        "code": `(${paramsStringWithType}): ${ret[0].text.trim()} {\n  if (this.pageContent.${identifier})\n    this.pageContent.${identifier}(${params.length ? params.map(v=>v.children[0].tsNode.escapedText).join(", ")  : ''});\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                        "code": `(${paramsStringWithType}): ${ret[0].text.trim()} {\n  return this.pageContent.${identifier}(${params.length ? params.map(v=>v.children[0].tsNode.escapedText).join(", ")  : ''});\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
                         "comment": `define in page`,
 
                     }
@@ -295,7 +295,59 @@ module.exports = function (
                                     ASSERT(false, 'not support yet')
                                 }
 
+                                // debugger
+
+                            }
+
+
+                            let getPrivateFunctionNode = _findCondiTsNodeRequire(mixedAstNode,
+                                (n) => {
+                                    return n.type ===  'MethodDeclaration' && (n.children?.[0]?.tsNode?.escapedText) === "getPrivateFunction"
+                                }
+                            )[0];
+
+                            if (getPrivateFunctionNode) {
                                 debugger
+                                let retTypeNode = getPrivateFunctionNode.children.find(vv => vv.type !== 'Parameter' && vv.type !== 'Identifier' && vv.type !== 'Block')
+
+                                ASSERT (retTypeNode.type === "TypeReference");
+
+                                ASSERT (retTypeNode.children[0].tsNode.escapedText === "Record");
+
+                                let typeNode = (retTypeNode.children[1]);
+                                let funcType = (retTypeNode.children[2]).text.trim().replace(/undefined[\s]*\|[\s]*/g, "").replace(/\|[\s]*undefined[\s]*/g, "").trim();
+
+                                ASSERT (typeNode.type === "LiteralType" || typeNode.type === "UnionType");
+
+                                let typeNameNodeArr = (typeNode.type === "UnionType") ? typeNode.children : [typeNode];
+
+                                let typeNameArr = typeNameNodeArr.map(
+                                    v => {
+                                        ASSERT(v.type === "LiteralType")
+                                        return v.tsNode.literal.text
+                                    }
+                                )
+
+                                // debugger
+
+
+                                result[0].childNodes.push(
+                                    ...typeNameArr.map(
+                                        name => ({
+                                            "tagName": "method",
+                                            "id": name,
+                                            "scope": "@CONTEXT__",
+                                            "kind": "const",
+                                            "type": `${funcType}`,
+                                            "code": `(e?: CktlV3.PageEvent): void {\n  if (this.pageContent.${name})\n    return this.pageContent.${name}(e);\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                                            "comment": `define mixed ${v.substr(v.lastIndexOf("/") + 1)}`,
+                                            "question": true,
+                                        })
+                                    )
+                                    
+                                );
+
+                                // debugger
 
                             }
 
@@ -310,8 +362,6 @@ module.exports = function (
             }
             debugger
         }
-
-       
 
         debugger
 

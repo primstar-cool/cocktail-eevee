@@ -2,7 +2,7 @@
 import CktlV3Framework from "../../@compile/@types/framework"
 import CktlV3Event from "../../@compile/@types/event"
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
-import EventCenter from '../../@common/event/event_center';
+import EventCenter from '../../@union/event/event_center';
 import CktlV3 from "../core/cktlv3"
 
 export class CAppBase implements CktlV3Framework.IAppBase {
@@ -38,7 +38,7 @@ export class CAppBase implements CktlV3Framework.IAppBase {
     }
     this.onError = (error: CktlV3Framework.AppLifeCycleParamAny) => {
       this.ec.notify(FID.ON_APP_ERROR, { error: error });
-      if (this.appParams.onError) this.appParams.onError.call(this);
+      if (this.appParams.onError) this.appParams.onError.call(this, error);
     }
     this.onPageNotFound = (options: CktlV3Framework.AppLifeCycleParamQuery) => {
       this.ec.notify(FID.ON_PAGE_NOT_FOUND, { options });
@@ -48,9 +48,9 @@ export class CAppBase implements CktlV3Framework.IAppBase {
 }
 
 
-type AppBaseCreator<TAP extends CktlV3Framework.IAppParams> = (param: TAP) => CktlV3Framework.IAppBase;
+type AppBaseCreator<TAP extends CktlV3Framework.IAppParams> = (param: TAP) => (CktlV3Framework.IAppBase & TAP);
 
-export default function createMPApp<TAP extends CktlV3Framework.IAppParams>(appCreator: AppBaseCreator<TAP> , appParam: TAP) {
+export default function createHarmonyApp<TAP extends CktlV3Framework.IAppParams>(appCreator: AppBaseCreator<TAP> , appParam: TAP) {
 
   /*DEBUG_START*/
   // require('../../@union/debug/console_extends.js');

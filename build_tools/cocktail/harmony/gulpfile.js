@@ -5,13 +5,15 @@
  */
 const fse = require('fs-extra');
 const path = require('path');
-
+const gulp = require('gulp')
 const {
   src,
   dest,
   series,
+  parallel,
   watch
-} = require('gulp')
+} = gulp;
+
 const srcRootPath = path.join(__dirname, "../../../src_original");
 const distRootPath = path.join(__dirname, "../../../src_harmony/entry/src/main/ets");
 
@@ -29,12 +31,12 @@ function createCleanTask() {
 }
 
 
-function getSpecialCopy() {
+function cleanUntargetPlatform() {
   // debugger
   let specialCopyFunc;
   
   if (1) {
-    specialCopyFunc = require('../glup/glup_stream_transform.remove_untarget_platform.js').bind(null, "HARMONY")
+    specialCopyFunc = require('../common/glup/glup_stream_transform.remove_untarget_platform.js').bind(null, "HARMONY")
   } else {
     const through2 = require('through2')
 
@@ -47,16 +49,21 @@ function getSpecialCopy() {
   return specialCopyFunc();
 }
 
+function getPageConvert(pagePath) {
+  // debugger
+  let specialCopyFunc;
+  specialCopyFunc = require('./glup/glup_stream_transform.convert_harmony.js').bind(null, pagePath, srcRootPath)
+  
+  return specialCopyFunc();
+}
+
 let commonFiles = [];
 readDir(`${srcRootPath}/cocktail/@union`, commonFiles);
 let platformFiles = [];
 readDir(`${srcRootPath}/cocktail/@union`, platformFiles);
-commonFiles = commonFiles.map(v => path.relative(srcRootPath + "/../", v));
-platformFiles = platformFiles.map(v => path.relative(srcRootPath + "/../", v));
+
 
 // debugger
-
-
 // 合集文件拷贝
 function unionCopyTask() {
   let ignoreFiles = [];
@@ -69,42 +76,23 @@ function unionCopyTask() {
     platformFiles.map(v => "!" + v.replace("cocktail/platform_harmony","cocktail/@union" ))
   );
 
-  // debugger
-  // let ignoreFiles = Object.values(TaskType).reduce((last, loopTaskType) => {
-  //   // 过滤 framework
-  //   last = last.concat([`!${OriginPath}/framework/*_tolerant`, `!${OriginPath}/framework/*_tolerant/**/*`, `!${OriginPath}/${FrameMapping[loopTaskType]}`, `!${OriginPath}/${FrameMapping[loopTaskType]}/**/*`])
-  //   // 不过滤当前环境
-  //   if (taskType === loopTaskType) {
-  //     return last
-  //   }
-  //   // 过滤指定目录
-  //   const avoidCopyFiles = SpecialFileMapping[loopTaskType] || []
-  //   const filterCopyFiles = avoidCopyFiles.filter(specCopyPath => (SpecialFileMapping[taskType].indexOf(specCopyPath) === -1))
-  //   return last.concat(filterCopyFiles.map(filePath => '!' + filePath))
-  // }, [])
-
-
-  // ignoreFiles.push('!src_original/project.private.config.json');
-  // ignoreFiles.push('!src_original/sitemap.json');
-
-
-  // let specialCopyFunc = getSpecialCopy(taskType)
-  // return src([`${srcRootPath}/**/*`].concat(ignoreFiles)).pipe(specialCopyFunc()).pipe(getSpecialConfigCopy(taskType)).pipe(dest(distRootPath))
-  // debugger
   return src([`${srcRootPath}/cocktail/@union/**/*`].concat(ignoreFiles)).pipe(dest(distRootPath + "/cocktail/@union"));
 }
 
 function compileCopyTask() {
   let ignoreFiles = [];
-  ignoreFiles.push('!src_original/cocktail/@compile/target_compile_platform.js');
+  ignoreFiles.push(`!${srcRootPath}/cocktail/@compile/target_compile_platform.js`);
 
   return src([`${srcRootPath}/cocktail/@compile/**/*`].concat(ignoreFiles)).pipe(dest(distRootPath + "/cocktail/@compile/"));
 }
 
 function commonCopyTask() {
-
+  let ignoreFiles = [];
+  ignoreFiles = ignoreFiles.concat(
+    platformFiles.map(v => "!" + v.replace("cocktail/platform_harmony","cocktail/@union" ))
+  );
   // debugger
-  return src([`${srcRootPath}/cocktail/@common/**/*`]).pipe(getSpecialCopy()).pipe(dest(distRootPath + "/cocktail/@union/"));
+  return src([`${srcRootPath}/cocktail/@common/**/*`].concat(ignoreFiles)).pipe(cleanUntargetPlatform()).pipe(dest(distRootPath + "/cocktail/@union/"));
 
 }
 
@@ -121,26 +109,54 @@ function platfromCopyTask() {
 function createCopyTask() {
   
   // return compileCopyTask();
-  return series.apply(null, 
-      [
-        unionCopyTask,
-        compileCopyTask,
-        commonCopyTask,
-        platfromCopyTask,
-      ]
-  );
+  return parallel.apply(null, [
+      createCocktailTask(),
+      compileCopyTask,
+      pageConvertTask("pages/index/index"),
+    ]
+
+  )
+  // series.apply(null, 
+  //     [
+  //       unionCopyTask,
+  //       compileCopyTask,
+  //       commonCopyTask,
+  //       platfromCopyTask,
+  //       pageConvertTask("pages/index/index"),
+  //     ]
+  // );
 }
+
+function createCocktailTask() {
+  return series.apply(null, 
+    [
+      unionCopyTask,
+      commonCopyTask,
+      platfromCopyTask,
+    ]
+  )
+}
+
+
+function pageConvertTask (pagePath) {
+  return function () {
+    
+    return src([`${srcRootPath}/${pagePath}.ts`]).pipe(cleanUntargetPlatform()).pipe(getPageConvert(pagePath)).pipe(dest(distRootPath + "/cocktail/@union"));
+  
+  }
+}
+
 
 /**
  * 创建监听任务
  * @param {TaskType} taskType 
  */
-function createWatchTask(taskType) {
+function createWatchTask() {
   return function watchTask() {
     if (0) {
   
     } else {
-      watch([`${OriginPath}/**/*`], { events: ['add', 'change', 'unlink', 'unlinkDir'] }, series(createCleanTask(taskType), createCopyTask(taskType)))
+      watch([`${OriginPath}/**/*`], { events: ['add', 'change', 'unlink', 'unlinkDir'] }, series(createCleanTask(), createCopyTask()))
     }
   }
 }

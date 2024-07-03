@@ -1,15 +1,17 @@
-const { IS_BROWSER, IS_TTMA , IS_WXMP, IS_SWAN, IS_ALIMP, IS_KSMP, IS_NODE} = require('../../@compile/target_compile_platform.js');
+const { IS_BROWSER, IS_TTMA , IS_WXMP, IS_SWAN, IS_ALIMP, IS_KSMP, IS_NODE, IS_HARMONY} = require('../../@compile/target_compile_platform.js');
+import CktlV3 from "../../@compile/@types/framework"
+
 let platformModule :CktlV3.IPageCreator;
 IS_WXMP && (platformModule = require('../../platform_mp/framework/page_base'));
-// IS_TTMA && (module.exports = require('../../framework_wxmp/class_define/page_base.js'));
-// IS_KSMP && (module.exports = require('../../framework_ksmp/class_define/page_base.js'));
+IS_TTMA && (platformModule = require('../../platform_mp/framework/page_base'));
+IS_KSMP && (platformModule = require('../../platform_mp/framework/page_base'));
+IS_SWAN && (platformModule = require('../../platform_mp/framework/page_base'));
+IS_ALIMP && (platformModule = require('../../platform_mp/framework/page_base'));
 
-// IS_SWAN && (module.exports = require('../../framework_swan/class_define/page_base.js'));
-// IS_ALIMP && (module.exports = require('../../framework_alimp/class_define/page_base.js'));
-// IS_BROWSER && (module.exports = require('../../framework_h5/class_define/page_base.js'));
-// IS_HAP && (module.exports = require('../../framework_hap/class_define/page_base.js'));
-// IS_CANVAS && (module.exports = require('../../framework_canvas/class_define/page_base.js'));
-// IS_NODE && (module.exports = require('../../framework_node/class_define/page_base.js'));
+// IS_BROWSER && (module.exports = require('../../platform_h5/framework/page_base'));
+// IS_NODE && (module.exports = require('../../platform_node/framework/page_base'));
+
+IS_HARMONY && (platformModule = require('../../platform_harmony/framework/page_base'));
 
 /*DEBUG_START*/
 if (typeof platformModule! !== 'function') throw new Error( "ERROE GET PAGE_BASE FUNC")

@@ -14,7 +14,7 @@ export namespace CktlV3 {
   export type IAppParams = CktlV3Framework.IAppParams;
   export type AppLifeCycleParamQuery = CktlV3Framework.AppLifeCycleParamQuery;
   export type AppLifeCycleParamAny = CktlV3Framework.AppLifeCycleParamQuery;
-
+  
   export type IPageParams<TPP extends IPageParams<TPP>> = CktlV3Framework.IPageParams<TPP>;
   export type IPageMixed<TPage extends IPageParams<TPage>> = CktlV3Framework.IPageMixed<TPage>;
 

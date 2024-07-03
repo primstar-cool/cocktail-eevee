@@ -77,7 +77,7 @@ pagePaths.forEach(
                 }
             }
 
-            debugger
+            // debugger
             let interfaceLoop1 = ((destFileDict[`${pageName}.interface.seg.ets`] || '').match(
                 new RegExp(`interface GenInterface_${pageName}_[a-zA-Z0-9]+[\\s]+`, "g")
             ) || []).map(v => v.substr(10).trim() + ", ")
@@ -100,7 +100,7 @@ struct ${pageName[0].toUpperCase() + pageName.substr(1)} {
   }
 }\n`;
 
-debugger
+// debugger
 
             fs.writeFileSync(exportPath + `/${pageName}.ets`, template, 'utf8');
 

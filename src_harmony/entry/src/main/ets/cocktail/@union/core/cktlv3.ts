@@ -1,7 +1,5 @@
-import EventCenter from '../../@common/event/event_center';
-import { IEventCenter } from '../../@compile/@types/event';
 import CktlV3Framework from "../../@compile/@types/framework"
-import CktlV3App from "../../platform_harmony/framework/app_base"
+import CktlV3Event from "../../@compile/@types/event"
 
 /*DEBUG_START*/
 import consoleExt from "../debug/console_extends"

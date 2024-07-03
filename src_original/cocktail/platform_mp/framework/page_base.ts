@@ -1,4 +1,5 @@
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
+import CktlV3 from "../../@compile/@types/framework"
 
 export = function createMPPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
 

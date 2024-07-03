@@ -3,12 +3,11 @@
  * @author lanbei
  * a frame for event notify
  */
-import CktlV3Event from "../../@compile/@types/event"
-import CktlV3 from "../../platform_harmony/core/cktlv3"
+import CktlV3 from "../../@union/core/cktlv3"
 const console = CktlV3.console; // add by cocktail convertor
 
 
-export default class EventCenter implements CktlV3Event.IEventCenter {
+export default class EventCenter implements CktlV3.IEventCenter {
 
     public constructor(private readonly uuid: string) {
     }

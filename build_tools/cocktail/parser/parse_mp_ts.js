@@ -49,7 +49,7 @@ module.exports = function (
 
     if (pageBaseImportNode && pageBaseImportNode.children && pageBaseImportNode.children[0].type === 'ImportClause') {
         if (pageBaseImportNode.children[0].children[0].type === 'Identifier') {
-            pageBaseFuncName = pageBaseImportNode.children[0].children[0].text.trim();
+            pageBaseFuncName = pageBaseImportNode.children[0].children[0].tsNode.escapedText;
         } else {
             ASSERT(false, "can't find page_base name")
         }
@@ -66,7 +66,7 @@ module.exports = function (
                 // debugger
                 if (v.type === "ExpressionStatement") {
 
-                    pageBaseCallNode = v.children.find(vv => vv.type === "CallExpression" && (vv?.children?.["0"]?.text||'').trim() === pageBaseFuncName);
+                    pageBaseCallNode = v.children.find(vv => vv.type === "CallExpression" && (vv?.children?.["0"]?.tsNode?.escapedText) === pageBaseFuncName);
                     
 
                     if (pageBaseCallNode) return true;
@@ -95,7 +95,7 @@ module.exports = function (
 
     if (pageObjectNode && pageObjectNode.children) {
         let dataExpressNode = pageObjectNode.children.find(
-            v => v.type === "PropertyAssignment" && v.children && v.children.find(vv => vv.type === 'Identifier' && vv.text.trim() === 'data')
+            v => v.type === "PropertyAssignment" && v.children && v.children.find(vv => vv.type === 'Identifier' && vv.tsNode.escapedText === 'data')
         );
         // debugger
         if (dataExpressNode) {
@@ -110,17 +110,18 @@ module.exports = function (
                 
                 typeLiteralNode.children.forEach(
                     v2 => {
+                        // debugger
                         if (v2.type === 'PropertySignature') {
                             ASSERT(v2.children[0].type === 'Identifier')
                             ASSERT(v2.children[1].type === 'TypeLiteral' || v2.children[1].type === 'TypeReference'
                                 || v2.children[1].type === "NumberKeyword" || v2.children[1].type === "StringKeyword" || v2.children[1].type === "ArrayType"
                             )
                             
-                            let propertyName = v2.children[0].text.trim()
+                            let propertyName = v2.children[0].tsNode.escapedText;
                             let codeNode = objectLiteralNode.children.find(v3 => 
                                 (v3.type === 'PropertyAssignment' 
                                 && v3.children?.[0]?.type === "Identifier" 
-                                && v3.children[0].text.trim() === propertyName)
+                                && v3.children[0].tsNode.escapedText === propertyName)
                             );
                             // debugger
                             
@@ -155,10 +156,59 @@ module.exports = function (
             console.warn("no default data in page define object");
         }
 
-        debugger
-        let onLoadExpressNode = pageObjectNode.children.find(
-            v => v.type === "MethodDeclaration" && v.children && v.children.find(vv => vv.type === 'Identifier'  && vv.text.trim() === 'onLoad')
+        let methodDeclarationNode = pageObjectNode.children.filter(
+            v => v.type === "MethodDeclaration"
         );
+
+        methodDeclarationNode.forEach(
+            v => {
+                let identifierNode = v.children.find(vv => vv.type === 'Identifier')
+                let identifier = identifierNode.tsNode.escapedText;
+                
+                if ([
+                    "onLoad", "onUnload", "onShow"
+                ].includes(identifier)) return;
+                
+                debugger
+                let params = v.children.filter(vv => vv.type === 'Parameter');
+
+                let ret = v.children.filter(vv => vv.type !== 'Parameter' && vv.type !== 'Identifier' && vv.type !== 'Block')
+
+                ASSERT(ret.length <= 1);
+                if (ret.length === 0) {
+                    ret.push({text: "unknown"});
+                }
+
+                let paramsStringWithType = `${params.map(v=>v.text.trim()).join(", ")}`;
+
+                // let indent = "  ";
+
+                result[0].childNodes.push(
+                    {
+                        "tagName": "method",
+                        "id": identifier,
+                        "scope": "@CONTEXT__",
+                        "kind": "const",
+                        "type": `(${paramsStringWithType}) => ${ret[0].text.trim()}`,
+                        "code": `(${paramsStringWithType}): ${ret[0].text.trim()} {\n  if (this.pageContent.${identifier})\n    this.pageContent.${identifier}(${params.length ? params.map(v=>v.children[0].tsNode.escapedText).join(", ")  : ''});\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                        "comment": `define in page`,
+
+                    }
+                );
+
+                    debugger
+            }
+        );
+        
+
+        debugger
+
+        // debugger
+        let onLoadExpressNode = methodDeclarationNode.find(
+            v => v.children && v.children.find(vv => vv.type === 'Identifier'  && vv.tsNode.escapedText === 'onLoad')
+        );
+        
+
         if (onLoadExpressNode) {
             let requireMixed = _loopRequire(onLoadExpressNode);
 
@@ -176,12 +226,12 @@ module.exports = function (
                             
                             let getPrivateDataNode = _findCondiTsNodeRequire(mixedAstNode,
                                 (n) => {
-                                    return n.type ===  'MethodDeclaration' && (n.children?.[0]?.text||'').trim() === "getPrivateData"
+                                    return n.type ===  'MethodDeclaration' && (n.children?.[0]?.tsNode?.escapedText) === "getPrivateData"
                                 }
                             )[0];
 
                             if (getPrivateDataNode) {
-                                debugger
+                                // debugger
 
                                 let retTypeNode = getPrivateDataNode.children.find(
                                     v => (v.type === "TypeLiteral" || v.type === "TypeReference")
@@ -197,7 +247,7 @@ module.exports = function (
                                 returnNode = returnNode[0];
                                 
                                 let objectLiteralNode = returnNode?.children?.[0];
-                                debugger
+                                // debugger
 
                                 if (retTypeNode?.type === "TypeLiteral") {
 
@@ -209,11 +259,14 @@ module.exports = function (
                                                     || v2.children[1].type === "NumberKeyword" || v2.children[1].type === "StringKeyword" || v2.children[1].type === "ArrayType"
                                                 )
                                                 
-                                                let propertyName = v2.children[0].text.trim()
+                                                let propertyName = v2.children[0].tsNode.escapedText;
+
+                                                // if (propertyName === 'aaaa') debugger
+
                                                 let codeNode = objectLiteralNode.children.find(v3 => 
                                                     (v3.type === 'PropertyAssignment' 
                                                     && v3.children?.[0]?.type === "Identifier" 
-                                                    && v3.children[0].text.trim() === propertyName)
+                                                    && v3.children[0].tsNode.escapedText === propertyName)
                                                 );
                                                 // debugger
                                                 
@@ -224,8 +277,9 @@ module.exports = function (
                                                         "scope": "@CONTEXT__",
                                                         "kind": "let",
                                                         "type": v2.children[1].text.trim(),
-                                                        "code": `this.pageContent.data.${propertyName}`,//codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                                                        "code": `this.pageContent.data.${propertyName}!`,//codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
                                                         "comment": `define mixed ${v.substr(v.lastIndexOf("/") + 1)}`,
+                                                        "question": true,
                                                     }
                                                 );
                     
@@ -256,6 +310,9 @@ module.exports = function (
             }
             debugger
         }
+
+       
+
         debugger
 
     } else {
@@ -285,7 +342,7 @@ function _findCondiTsNodeRequire(node, condi, arr) {
 function _loopRequire(node, arr) {
     if (!arr) arr = [];
 
-    if (node.type === "CallExpression" && (node.children?.[0]?.text || '').trim() === 'require') {
+    if (node.type === "CallExpression" && (node.children?.[0]?.tsNode?.escapedText) === 'require') {
         arr.push(node);
     }
 

@@ -14,7 +14,7 @@ import CktlV3 from "../core/cktlv3"
 //   return target
 // }
 
-export function loadMixed<TPage extends CktlV3.PageBaseWithMixed<TPage>>(mixedClassArray: Array<CktlV3.PageMixedCreator<TPage>>, page: TPage, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedClassArray: Array<CktlV3.PageMixedCreator<TPage>>, page: TPage, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
@@ -137,7 +137,7 @@ export function loadMixed<TPage extends CktlV3.PageBaseWithMixed<TPage>>(mixedCl
 
 };
 
-export function unloadMixed<TPage extends CktlV3.PageBaseWithMixed<TPage>>(page: TPage) {
+export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page: TPage) {
 
   // debugger
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
@@ -171,7 +171,7 @@ export function unloadMixed<TPage extends CktlV3.PageBaseWithMixed<TPage>>(page:
 };
 
 
-export function forEachMixed<TPage extends CktlV3.PageBaseWithMixed<TPage>>(page: TPage, callback: () => void) {
+export function forEachMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page: TPage, callback: () => void) {
 
   if (page && page.$pageMixedInfo?.$mixedInstanceArray && callback) {
     page.$pageMixedInfo.$mixedInstanceArray.forEach(callback);

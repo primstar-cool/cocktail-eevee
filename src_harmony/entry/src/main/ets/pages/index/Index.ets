@@ -1,4 +1,4 @@
-import { GenInterface_index_userInfo, PageBase_index } from './interface';
+import { PageBase_index } from './interface';
 import { getPageContent } from './PageBase_index';
 
 @Entry
@@ -7,9 +7,9 @@ struct Index {
 
   private pageContent: PageBase_index = getPageContent();
 
-  @State userInfo: GenInterface_index_userInfo = this.pageContent.data.userInfo; /*define in page.data*/
+  @State userInfo: GenInterface_index_pageData_userInfo = this.pageContent.data.userInfo; /*define in page.data*/
   @State sharePageData: number = this.pageContent.data.sharePageData; /*define in page.data*/
-  @State text: string = this.pageContent.data.text; /*define mixed bottom_text*/
+  @State text: string = this.pageContent.data.text!; /*define mixed bottom_text*/
 
   build() {
     Column() {

@@ -1,22 +1,4 @@
-// index.ts
-
 import { loadMixed, unloadMixed } from "../../cocktail/@union/utils/page_mixed";
-
-//will created on arkTSs
-// interface PageBaseIndex extends CktlV3.PageBaseWithMixed<PageBaseIndex> {
-//   bindViewTap: ()=> void; 
-//   data: {
-//     userInfo: {
-//       avatarUrl: string,
-//       nickName: string,
-//       complex: {
-//         z: number,
-//         a?: {b: number},
-//         c: string
-//       }
-//     }, sharePageData: number
-//   }
-// }
 
 // 获取应用实例
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
@@ -42,7 +24,7 @@ PageBase({
       nickName: string,
       complex: {
         z: number,
-        a?: {b: number},
+        aaaa?: {b: number},
         c: string
       }
     }, sharePageData: number
@@ -62,9 +44,10 @@ PageBase({
     unloadMixed(this);
   },
   // 事件处理函数
-  bindViewTap() {
+  bindViewTap(a: number, b: string) {
     wx.redirectTo({
       url: '../logs/logs',
     })
+    return {B: 2}
   }
 })

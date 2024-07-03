@@ -155,14 +155,14 @@ declare namespace CktlV3 {
 
   type IComponentCreator = (componentParams: ComponentParams) => void|ComponentBase;
 
-  interface PageMixedFunction {
-    name: string;
-    func: (e?: PageEvent) => void;
-  }
+  // interface PageMixedFunction {
+  //   name: string;
+  //   func: (e?: PageEvent) => void;
+  // }
 
   interface IPageMixed<TPage extends IPageParams<TPage>> {
     getPrivateData?: (page: TPage) => object;
-    getPrivateFunction?:(page: TPage) => Record<string, (e?: PageEvent) => void>;
+    getPrivateFunction?:(page: TPage) => Record<string, undefined|((e?: PageEvent) => void)>;
     onPageInit?: (page: TPage, options?: PageLifeCycleParamQuery) => void;
     dispose?: (page: TPage) => void;
   }

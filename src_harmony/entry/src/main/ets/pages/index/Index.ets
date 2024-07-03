@@ -1,11 +1,11 @@
-import { PageBase_index, GenInterface_index_pageData_userInfo } from './interface';
+import { IPageBase_index, GenInterface_index_pageData_userInfo } from './interface';
 import { getPageContent } from './PageBase_index';
 
 @Entry
 @Component
 struct Index {
 
-  private pageContent: PageBase_index = getPageContent();
+  private pageContent: IPageBase_index = getPageContent();
 
   @State userInfo: GenInterface_index_pageData_userInfo = this.pageContent.data.userInfo; /*define in page.data*/
   @State sharePageData: number = this.pageContent.data.sharePageData; /*define in page.data*/

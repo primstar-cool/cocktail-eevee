@@ -8,17 +8,19 @@ export namespace CktlV3 {
   export type AppLifeCycleParamQuery = CktlV3Framework.AppLifeCycleParamQuery;
   export type AppLifeCycleParamAny = CktlV3Framework.AppLifeCycleParamQuery;
 
-  export type IPageParams<TPP extends IPageParams<TPP>> = CktlV3Framework.IPageParams<TPP>;
-  export type IPageMixed<TPage extends IPageBase<TPage>> = CktlV3Framework.IPageMixed<TPage>;
+  export type IPageParams = CktlV3Framework.IPageParams;
+  export type IPageMixed = CktlV3Framework.IPageMixed;
 
-  export type IPageBase<TPB extends IPageParams<TPB>> = CktlV3Framework.IPageBase<TPB>;
-  export type IPageBaseWithMixed<TPage extends IPageBaseWithMixed<TPage>> = CktlV3Framework.IPageBaseWithMixed<TPage>;
+  export type IPageBase = CktlV3Framework.IPageBase;
+  export type IPageBaseWithMixed = CktlV3Framework.IPageBaseWithMixed;
 
-  export type PageMixedCreator<TPage extends IPageBaseWithMixed<TPage>> = CktlV3Framework.PageMixedCreator<TPage>;
+  export type PageMixedCreator = CktlV3Framework.PageMixedCreator;
 
   export type PageLifeCycleParamQuery = CktlV3Framework.PageLifeCycleParamQuery;
   export type PageEvent = CktlV3Framework.PageEvent;
+  export type PageMixedInfo = CktlV3Framework.PageMixedInfo;
   export type PageEventMethod = CktlV3Framework.PageEventMethod;
+
 
   export type ComponentParams = CktlV3Framework.ComponentParams;
 
@@ -32,7 +34,7 @@ export namespace CktlV3 {
   export type IEventCenter = CktlV3Event.IEventCenter;
   export type EventCallback = CktlV3Event.EventCallback;
   export type EventTriggerHolderRefer = CktlV3Event.EventTriggerHolderRefer;
-  
+
 }
 
 export default CktlV3;

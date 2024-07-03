@@ -48,9 +48,9 @@ export class CAppBase implements CktlV3Framework.IAppBase {
 }
 
 
-type AppBaseCreator<TAP extends CktlV3Framework.IAppParams> = (param: TAP) => CktlV3Framework.IAppBase;
+type AppBaseCreator<TAP extends CktlV3Framework.IAppParams> = (param: TAP) => (CktlV3Framework.IAppBase & TAP);
 
-export default function createMPApp<TAP extends CktlV3Framework.IAppParams>(appCreator: AppBaseCreator<TAP> , appParam: TAP) {
+export default function createHarmonyApp<TAP extends CktlV3Framework.IAppParams>(appCreator: AppBaseCreator<TAP> , appParam: TAP) {
 
   /*DEBUG_START*/
   // require('../../@union/debug/console_extends.js');

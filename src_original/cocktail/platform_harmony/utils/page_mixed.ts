@@ -1,10 +1,11 @@
 /*DEBUG_START*/
-import EventTriggerHolder from "../../@common/event/event_trigger_holder";
+import EventTriggerHolder from "../../@union/event/event_trigger_holder";
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 /*DEBUG_END*/
 
 import CktlV3 from "../core/cktlv3"
 
+const console = CktlV3.console; // add by cocktail convertor
 // function assign(target: Record<string, Object>, …source: Object[]): Record<string, Object> {
 //   for (let s of source) {
 //       for (let k of Object.keys(s)) {
@@ -14,26 +15,26 @@ import CktlV3 from "../core/cktlv3"
 //   return target
 // }
 
-export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedClassArray: Array<CktlV3.PageMixedCreator<TPage>>, page: TPage, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
 
-  const mixedInstanceArray: CktlV3.IPageMixed<TPage>[] = mixedClassArray.map(
-    (clzCreator: CktlV3.PageMixedCreator<TPage>) =>
+  const mixedInstanceArray: CktlV3.IPageMixed[] = mixedClassArray.map(
+    (clzCreator: CktlV3.PageMixedCreator) =>
     {
         return clzCreator();
     });
 
 
-  CktlV3.ASSERT(!page.$pageMixedInfo);
+  console.ASSERT(!page.$pageMixedInfo);
 
   page.$pageMixedInfo = {
 
   }
 
 
-  // const pageMixed: CktlV3.PageBase & { $specMixedInstanceArray?: Array<CktlV3.IPageMixed<TPage>>, $mixedInstanceArray?: Array<CktlV3.IPageMixed<TPage>>, $debugRawFunctionMap?: String[], $unloadChecker?: any } = page;
+  // const pageMixed: CktlV3.PageBase & { $specMixedInstanceArray?: Array<CktlV3.IPageMixed>, $mixedInstanceArray?: Array<CktlV3.IPageMixed>, $debugRawFunctionMap?: String[], $unloadChecker?: any } = page;
 
   if (page.$pageMixedInfo.$specMixedInstanceArray) {
     page.$pageMixedInfo.$mixedInstanceArray = page.$pageMixedInfo.$specMixedInstanceArray.concat(mixedInstanceArray);
@@ -43,7 +44,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   }
 
   /*DEBUG_START*/
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>) => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed) => {
 
     var insProto = (ins as any).__proto__;
     var funcProperty = Object.getOwnPropertyNames(insProto);
@@ -60,20 +61,20 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   /*DEBUG_END*/
 
   let privateDataCache: any|undefined = {};
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>): void => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed): void => {
     if (ins.getPrivateData) {
       let privateData = ins.getPrivateData(page);
 
       /*DEBUG_START*/
       for (let key in privateData) {
-        CktlV3.ASSERT(key.indexOf('$') !== 0 && key.indexOf('_') !== 0, 'Data key should not starts with _ or $');
-        CktlV3.ASSERT(!page.data || page.data[key] === undefined && privateDataCache![key] === undefined, 'conflict mixed private field ' + key);
+        console.ASSERT(key.indexOf('$') !== 0 && key.indexOf('_') !== 0, 'Data key should not starts with _ or $');
+        console.ASSERT(!page.data || page.data[key] === undefined && privateDataCache![key] === undefined, 'conflict mixed private field ' + key);
       }
       /*DEBUG_END*/
       Object.assign(privateDataCache!, privateData);
     }
   });
-  page.setData(privateDataCache);
+  // page.setData(privateDataCache);
   privateDataCache = undefined;
 
   /*DEBUG_START*/
@@ -85,7 +86,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   }
   /*DEBUG_END*/
 
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>): void => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed): void => {
     if (ins.getPrivateFunction) {
 
       /*DEBUG_START*/
@@ -99,10 +100,10 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
 
 
 
-      let funcs: Record<string, (e?: CktlV3.PageEvent) => void> = ins.getPrivateFunction(page);
+      let funcs: Record<string, undefined|CktlV3.PageEventMethod> = ins.getPrivateFunction(page);
 
       for (let key in funcs) {
-        CktlV3.ASSERT(funcs[key] && !functionMap[key], 'conflict function ' + key);
+        console.ASSERT(funcs[key] && !functionMap[key], 'conflict function ' + key);
         functionMap[key] = funcs[key];
         (page as any)[key] = funcs[key];
       }
@@ -111,7 +112,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
       for (let key in functionMap) {
         if (key !== 'setData') {
           // 开启性能面板时，setData 会导致报错
-          CktlV3.ASSERT(functionMap[key] === (page as any)[key], 'conflict function ' + key);
+          console.ASSERT(functionMap[key] === (page as any)[key], 'conflict function ' + key);
         }
       }
       /*DEBUG_END*/
@@ -119,7 +120,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   });
 
   page.$pageMixedInfo.$mixedInstanceArray.forEach(
-    (ins: CktlV3.IPageMixed<TPage>): void => {
+    (ins: CktlV3.IPageMixed): void => {
       if (ins.onPageInit) {
         ins.onPageInit(page, options);
       }
@@ -130,14 +131,14 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   // page.$pageMixedInfo.$unloadChecker = new EventTriggerHolder(FID.ON_PAGE_UNLOADED, (
   //   _eventName: any, eventData : any) => {
   //   if (eventData.page === page) {
-  //     CktlV3.ASSERT(false, "forget use【unloadMixed】in page unload!!!")
+  //     console.ASSERT(false, "forget use【unloadMixed】in page unload!!!")
   //   }
   // })
   /*DEBUG_END*/
 
 };
 
-export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page: TPage) {
+export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage) {
 
   // debugger
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
@@ -146,7 +147,7 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page
     return;
   }
 
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>): void => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed): void => {
     if (ins && ins.dispose) {
       ins.dispose(page);
     }
@@ -156,7 +157,7 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page
   /*DEBUG_START*/
   for (let key in page) {
     if (typeof (page as any)[key] === 'function') {
-      CktlV3.ASSERT(~page.$pageMixedInfo.$debugRawFunctionMap!.indexOf(key), 'error remove function 【' + key + "】");
+      console.ASSERT(~page.$pageMixedInfo.$debugRawFunctionMap!.indexOf(key), 'error remove function 【' + key + "】");
     }
   }
   page.$pageMixedInfo.$debugRawFunctionMap = undefined;
@@ -171,10 +172,9 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page
 };
 
 
-export function forEachMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page: TPage, callback: () => void) {
+export function forEachMixed(page: CktlV3.IPageBaseWithMixed, callback: () => void) {
 
   if (page && page.$pageMixedInfo?.$mixedInstanceArray && callback) {
     page.$pageMixedInfo.$mixedInstanceArray.forEach(callback);
   }
-
 }

@@ -24,7 +24,7 @@ export interface GenInterface_index_pageData {
 }
 
 
-export interface PageBase_index extends CktlV3.IPageBaseWithMixed<PageBase_index> {
+export interface IPageBase_index extends CktlV3.IPageBaseWithMixed {
 
   bindViewTap: () => void;
   data: {

@@ -1,7 +1,56 @@
+import CktlV3Framework from "../../@compile/@types/framework"
+import CktlV3Event from "../../@compile/@types/event"
 import CktlV3 from "../core/cktlv3"
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 
-export default function createHarmonyPage<TPP extends CktlV3.IPageParams<TPP>>(pageParam: TPP) {
+
+
+export class CPageBase implements CktlV3.IPageBase {
+
+  pageName: string;
+  data: any;
+  route: string;
+  setData: (newData: object, renderCallback?: () => void) => void;
+
+  public onLoad: CktlV3Framework.IPageBaseLifeCycleQuery;
+  public onReady: CktlV3Framework.IPageBaseLifeCycleVoid;
+  public onHide: CktlV3Framework.IPageBaseLifeCycleVoid;
+  public onUnload: CktlV3Framework.IPageBaseLifeCycleVoid;
+  public setTitle: (title: string) => void;
+  // private readonly appParams: CktlV3Framework.IAppParams;
+
+  constructor(protected readonly pageParams: CktlV3Framework.IPageParams) {
+
+    this.pageName = pageParams.pageName;
+    this.data = Object.assign({}, pageParams.data);
+
+    this.onLoad = (options: CktlV3Framework.PageLifeCycleParamQuery) => void {
+
+    }
+
+    this.onReady = () => void {
+
+    }
+
+    this.onHide = () => void {
+
+    }
+
+    this.onUnload = () => void {
+
+    }
+
+    this.setTitle = (title: string) => {
+
+    }
+
+  }
+}
+
+type PageBaseCreator<TPP extends CktlV3Framework.IPageParams> = (param: TPP) => (CktlV3Framework.IPageBase & TPP);
+
+
+export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParams>(pageCreator: PageBaseCreator<TPP> , pageParam: TPP) {
 
   // CktlV3.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
   //
@@ -118,7 +167,10 @@ export default function createHarmonyPage<TPP extends CktlV3.IPageParams<TPP>>(p
   // }
   // /*DEBUG_END*/
   
-  return (app?: CktlV3.IAppBase): TPP => {
-    return pageParam; //clone
+  return (): (CktlV3Framework.IPageBase & TPP) => {
+
+    let newPage: (CktlV3Framework.IPageBase & TPP) = pageCreator(pageParam);
+
+    return newPage; //clone
   };
 }

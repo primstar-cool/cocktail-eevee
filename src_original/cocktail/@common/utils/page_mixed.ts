@@ -12,18 +12,18 @@ import CktlV3 from "../../@compile/@types/framework"
 //   return target 
 // }
 
-export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedClassArray: Array<CktlV3.PageMixedCreator<TPage>|CktlV3.PageMixedClass<TPage>>, page: TPage, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.PageMixedClass>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
 
-  const mixedInstanceArray: CktlV3.IPageMixed<TPage>[] = mixedClassArray.map(
-    (clzCreator: CktlV3.PageMixedCreator<TPage>|CktlV3.PageMixedClass<TPage>) => 
+  const mixedInstanceArray: CktlV3.IPageMixed[] = mixedClassArray.map(
+    (clzCreator: CktlV3.PageMixedCreator|CktlV3.PageMixedClass) => 
       {
         if ( clzCreator.constructor) {
-          return new (clzCreator as CktlV3.PageMixedClass<TPage>)()
+          return new (clzCreator as CktlV3.PageMixedClass)()
         } else {
-          return (clzCreator as CktlV3.PageMixedCreator<TPage>)();
+          return (clzCreator as CktlV3.PageMixedCreator)();
         }
     });
   
@@ -35,7 +35,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   }
 
   
-  // const pageMixed: CktlV3.PageBase & { $specMixedInstanceArray?: Array<CktlV3.IPageMixed<TPage>>, $mixedInstanceArray?: Array<CktlV3.IPageMixed<TPage>>, $debugRawFunctionMap?: String[], $unloadChecker?: any } = page;
+  // const pageMixed: CktlV3.PageBase & { $specMixedInstanceArray?: Array<CktlV3.IPageMixed>, $mixedInstanceArray?: Array<CktlV3.IPageMixed>, $debugRawFunctionMap?: String[], $unloadChecker?: any } = page;
 
   if (page.$pageMixedInfo.$specMixedInstanceArray) {
     page.$pageMixedInfo.$mixedInstanceArray = page.$pageMixedInfo.$specMixedInstanceArray.concat(mixedInstanceArray);
@@ -45,7 +45,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   }
 
   /*DEBUG_START*/
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>) => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed) => {
 
     var insProto = (ins as any).__proto__;
     var funcProperty = Object.getOwnPropertyNames(insProto);
@@ -62,7 +62,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   /*DEBUG_END*/
 
   let privateDataCache: any|undefined = {};
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>): void => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed): void => {
     if (ins.getPrivateData) {
       let privateData = ins.getPrivateData(page);
 
@@ -87,7 +87,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   }
   /*DEBUG_END*/
 
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>): void => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed): void => {
     if (ins.getPrivateFunction) {
 
       /*DEBUG_START*/
@@ -125,7 +125,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
   });
 
   page.$pageMixedInfo.$mixedInstanceArray.forEach(
-    (ins: CktlV3.IPageMixed<TPage>): void => {
+    (ins: CktlV3.IPageMixed): void => {
       if (ins.onPageInit) {
         ins.onPageInit(page, options);
       }
@@ -143,7 +143,7 @@ export function loadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(mixedC
 
 };
 
-export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page: TPage) {
+export function unloadMixed(page: CktlV3.IPageBaseWithMixed) {
 
   // debugger
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
@@ -152,7 +152,7 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page
     return;
   }
 
-  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed<TPage>): void => {
+  page.$pageMixedInfo.$mixedInstanceArray.forEach((ins: CktlV3.IPageMixed): void => {
     if (ins && ins.dispose) {
       ins.dispose(page);
     }
@@ -177,7 +177,7 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page
 };
 
 
-export function forEachMixed<TPage extends CktlV3.IPageBaseWithMixed<TPage>>(page: TPage, callback: () => void) {
+export function forEachMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage, callback: () => void) {
 
   if (page && page.$pageMixedInfo?.$mixedInstanceArray && callback) {
     page.$pageMixedInfo.$mixedInstanceArray.forEach(callback);

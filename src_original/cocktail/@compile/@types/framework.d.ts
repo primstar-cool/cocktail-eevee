@@ -55,26 +55,25 @@ declare namespace CktlV3 {
 }
 
 declare namespace CktlV3 {
-  interface IPageParams<TPP extends IPageParams<TPP>> {
+  interface IPageParams {
     pageName: string;
     data?: any,
-    onLoad?: IPageBaseLifeCycleQuery<TPP>;
-    onShow?: IPageBaseLifeCycleVoid<TPP>;
-    onReady?: IPageBaseLifeCycleVoid<TPP>;
-    onHide?: IPageBaseLifeCycleVoid<TPP>;
-    onUnload?: IPageBaseLifeCycleVoid<TPP>;
+    onLoad?: IPageBaseLifeCycleQuery;
+    onShow?: IPageBaseLifeCycleVoid;
+    onReady?: IPageBaseLifeCycleVoid;
+    onHide?: IPageBaseLifeCycleVoid;
+    onUnload?: IPageBaseLifeCycleVoid;
   }
 
-  interface IPageBase<TPB extends IPageParams<TPB>> extends IPageParams<TPB> {
+  interface IPageBase extends IPageParams {
     data: any;
     route: string;
     setData: (newData: object, renderCallback?: () => void) => void;
 
-    onLoad: IPageBaseLifeCycleQuery<TPB>;
-    onShow: IPageBaseLifeCycleVoid<TPB>;
-    onReady: IPageBaseLifeCycleVoid<TPB>;
-    onHide: IPageBaseLifeCycleVoid<TPB>;
-    onUnload: IPageBaseLifeCycleVoid<TPB>;
+    onLoad: IPageBaseLifeCycleQuery;
+    onReady: IPageBaseLifeCycleVoid;
+    onHide: IPageBaseLifeCycleVoid;
+    onUnload: IPageBaseLifeCycleVoid;
     setTitle: (title: string) => void;
 
   }
@@ -82,19 +81,18 @@ declare namespace CktlV3 {
   interface IDispose {
     dispose: () => void;
   }
-  interface IDisposePage<TPB extends IPageBase<TPB>> {
-    dispose: (pageBase: IPageBase<TPB>) => void;
+  interface IDisposePage {
+    dispose: (pageBase: IPageBase) => void;
   }
 
 
   type PageLifeCycleParamAny = object;
   type PageLifeCycleParamQuery = {query: {[""]?:string}};
 
-  type IPageBaseLifeCycleVoid<TPB extends IPageParams<TPB>> = <TPB extends IPageParams<TPB>>(this: IPageBase<TPB>) => void;
-  type IPageBaseLifeCycleQuery<TPB extends IPageParams<TPB>> = <TPB extends IPageParams<TPB>>(this: IPageBase<TPB>, options: PageLifeCycleParamQuery) => void;
+  type IPageBaseLifeCycleVoid = (this: IPageBase) => void;
+  type IPageBaseLifeCycleQuery = (this: IPageBase, options: PageLifeCycleParamQuery) => void;
 
-  // type IPageCreator = (pageParams: IPageParams) => void|PageBase;
-  type IPageCreator = <TPP extends IPageParams<TPP>>(appParams: TPP) => void|TPP;
+  type IPageCreator = (pageParams: IPageParams) => void|IPageBase;
 
   interface PageEventTarget {
     dataset: Record<string, number|string|object|boolean>
@@ -149,13 +147,13 @@ declare namespace CktlV3 {
 }
 declare namespace CktlV3 {
 
-  interface IPageBaseWithMixed<TPage extends IPageBaseWithMixed<TPage>> extends IPageBase<TPage> {
-    $pageMixedInfo?: PageMixedInfo<TPage>;
+  interface IPageBaseWithMixed extends IPageParams {
+    $pageMixedInfo?: PageMixedInfo;
   }
 
-  interface PageMixedInfo<TPage extends IPageBase<TPage>> {
-    $specMixedInstanceArray?: Array<IPageMixed<TPage>>;
-    $mixedInstanceArray?: Array<IPageMixed<TPage>>;
+  interface PageMixedInfo {
+    $specMixedInstanceArray?: Array<IPageMixed>;
+    $mixedInstanceArray?: Array<IPageMixed>;
     $debugRawFunctionMap?: String[];
     $unloadChecker?: IDispose;
   }
@@ -167,15 +165,15 @@ declare namespace CktlV3 {
     func: (e?: PageEvent) => void;
   }
 
-  interface IPageMixed<TPage extends IPageBase<TPage>> {
-    getPrivateData?: (page: TPage) => object;
-    getPrivateFunction?:(page: TPage) => Record<string, undefined|((e?: PageEvent) => void)>;
-    onPageInit?: (page: TPage, options?: PageLifeCycleParamQuery) => void;
-    dispose?: (page: TPage) => void;
+  interface IPageMixed {
+    getPrivateData?: (page: IPageBaseWithMixed) => object;
+    getPrivateFunction?:(page: IPageBaseWithMixed & IPageBase) => Record<string, undefined|PageEventMethod>;
+    onPageInit?: (page: IPageBaseWithMixed & IPageBase, options?: PageLifeCycleParamQuery) => void;
+    dispose?: (page: IPageBaseWithMixed) => void;
   }
 
-  type PageMixedClass<T extends IPageBaseWithMixed<T>> = new() => IPageMixed<T>;
-  type PageMixedCreator<T extends IPageBaseWithMixed<T>> = () => IPageMixed<T>;
+  type PageMixedClass = new() => IPageMixed;
+  type PageMixedCreator = () => IPageMixed;
 
 
 

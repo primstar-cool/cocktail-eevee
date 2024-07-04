@@ -15,6 +15,7 @@ export namespace CktlV3 {
   export type IPageBaseWithMixed = CktlV3Framework.IPageBaseWithMixed;
 
   export type PageMixedCreator = CktlV3Framework.PageMixedCreator;
+  export type PageMixedClass = CktlV3Framework.PageMixedClass;
 
   export type PageLifeCycleParamQuery = CktlV3Framework.PageLifeCycleParamQuery;
   export type PageEvent = CktlV3Framework.PageEvent;

@@ -12,21 +12,26 @@ export class CPageBase implements CktlV3.IPageBase {
   route: string;
   setData: (newData: object, renderCallback?: () => void) => void;
 
-  public onLoad: CktlV3Framework.IPageBaseLifeCycleQuery;
+  onLoad(options:  CktlV3Framework.PageLifeCycleParamQuery): void {
+    console.log("onLsssoad");
+
+    this.data.text = JSON.stringify(options.query);
+
+    if (this.pageParams.onLoad)
+      this.pageParams.onLoad.call(this, options)
+    // console.log(JSON.stringify(options))
+  };
   public onReady: CktlV3Framework.IPageBaseLifeCycleVoid;
   public onHide: CktlV3Framework.IPageBaseLifeCycleVoid;
   public onUnload: CktlV3Framework.IPageBaseLifeCycleVoid;
   public setTitle: (title: string) => void;
-  // private readonly appParams: CktlV3Framework.IAppParams;
+  // protected readonly pageParams: CktlV3Framework.IPageParams;
 
   constructor(protected readonly pageParams: CktlV3Framework.IPageParams) {
-
+  console.log("CPageBase constructor")
+    // this.pageParams = pageParams;
     this.pageName = pageParams.pageName;
     this.data = Object.assign({}, pageParams.data);
-
-    this.onLoad = (options: CktlV3Framework.PageLifeCycleParamQuery) => void {
-
-    }
 
     this.onReady = () => void {
 
@@ -43,6 +48,12 @@ export class CPageBase implements CktlV3.IPageBase {
     this.setTitle = (title: string) => {
 
     }
+    console.log(typeof this.onLoad + " " + this.data.text);
+    console.log(this.onLoad.toString());
+
+    this.onLoad({query: {"asd": '2323'}})
+
+    console.log("onLoad end" + " " + this.data.text);
 
   }
 }

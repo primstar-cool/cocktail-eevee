@@ -11,21 +11,30 @@ import CktlV3 from "../../@compile/@types/framework"
 //   } 
 //   return target 
 // }
+type PageMixedClassEs6Wrap = {[key:string]: CktlV3.PageMixedClass};
 
-export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.PageMixedClass>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.PageMixedClass|PageMixedClassEs6Wrap>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
 
   const mixedInstanceArray: CktlV3.IPageMixed[] = mixedClassArray.map(
-    (clzCreator: CktlV3.PageMixedCreator|CktlV3.PageMixedClass) => 
+    (clzCreator: CktlV3.PageMixedCreator|CktlV3.PageMixedClass|PageMixedClassEs6Wrap) => 
       {
-        if ( clzCreator.constructor) {
-          return new (clzCreator as CktlV3.PageMixedClass)()
+        if (typeof clzCreator === 'function') {
+          if (clzCreator.constructor) {
+            return new (clzCreator as CktlV3.PageMixedClass)()
+          } else  {
+            return (clzCreator as CktlV3.PageMixedCreator)();
+          } 
         } else {
-          return (clzCreator as CktlV3.PageMixedCreator)();
+          let wrap: PageMixedClassEs6Wrap = clzCreator as PageMixedClassEs6Wrap;
+          for (let key in wrap) {
+            return new (wrap[key])();
+          }
+          return undefined;
         }
-    });
+    }).filter(v=> v!== undefined ) as CktlV3.IPageMixed[];
   
 
   console.ASSERT(!page.$pageMixedInfo);

@@ -1,7 +1,7 @@
 import CktlV3 from "../../../../cocktail/@union/core/cktlv3"
 type BottomTextPage = CktlV3.IPageBaseWithMixed;
 
-export = class BottomText implements CktlV3.IPageMixed {
+export class BottomText implements CktlV3.IPageMixed {
   getPrivateData(_page: BottomTextPage): {text: string} {
     return {text: "Hello Cocktail"}
   }

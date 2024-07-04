@@ -5,11 +5,14 @@ app.$regNextPageRoute('pages/index/index');
 
 import { loadMixed, unloadMixed } from '../../cocktail/@union/utils/page_mixed';
 
+import {BottomText} from "./mixed/bottom_text/bottom_text"
 
 import { GenInterface_index_pageData, IPageBase_index } from './interface';
 let PageBaseCreator_index: () => CktlV3.IPageBase & IPageBase_index;
 
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+
+let a: any;
 
 class PageBase_index extends CPageBase implements IPageBase_index {
 
@@ -19,13 +22,17 @@ class PageBase_index extends CPageBase implements IPageBase_index {
 
 
   constructor(pageParams: IPageBase_index) {
+
+    console.log("ererer")
+    // console.log(pageParams.data)
+
     super(pageParams);
     // this.$pageMixedInfo = {};
-
+    // this.onLoad({query: {}});
 
   }
   bindViewTap() {
-    this.pageParams.bindViewTap();
+    this.pageParams.bindViewTap(1,"2");
   }
 
 }
@@ -50,13 +57,13 @@ PageBase<IPageBase_index>(
 
   onLoad(options: CktlV3.PageLifeCycleParamQuery) {
 
-    // loadMixed(
-    //   [
-    //     // require("./mixed/bottom_text/bottom_text"),
-    //   ],
-    //   this,
-    //   options
-    // );
+    loadMixed(
+      [
+        // () => new BottomText(),
+      ],
+      this,
+      options
+    );
   },
   onUnload() {
     // unloadMixed(this);

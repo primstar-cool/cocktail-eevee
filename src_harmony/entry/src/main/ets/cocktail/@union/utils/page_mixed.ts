@@ -15,15 +15,19 @@ const console = CktlV3.console; // add by cocktail convertor
 //   return target
 // }
 
-export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.PageMixedClass>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
 
   const mixedInstanceArray: CktlV3.IPageMixed[] = mixedClassArray.map(
-    (clzCreator: CktlV3.PageMixedCreator) =>
+    (clzCreator: CktlV3.PageMixedCreator|CktlV3.PageMixedClass) =>
     {
-        return clzCreator();
+      if (clzCreator.constructor) {
+        return new (clzCreator as CktlV3.PageMixedClass)()
+      } else  {
+        return (clzCreator as CktlV3.PageMixedCreator)();
+      }
     });
 
 

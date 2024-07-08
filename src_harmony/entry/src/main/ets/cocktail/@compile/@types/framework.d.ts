@@ -87,7 +87,7 @@ declare namespace CktlV3 {
 
 
   type PageLifeCycleParamAny = object;
-  type PageLifeCycleParamQuery = {query: {[""]?:string}};
+  type PageLifeCycleParamQuery = {query: Record<string, string>};
 
   type IPageBaseLifeCycleVoid = (this: IPageBase) => void;
   type IPageBaseLifeCycleQuery = (this: IPageBase, options: PageLifeCycleParamQuery) => void;

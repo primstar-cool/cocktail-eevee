@@ -103,9 +103,12 @@ export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator>, page:
       let funcs: Record<string, undefined|CktlV3.PageEventMethod> = ins.getPrivateFunction(page);
 
       for (let key in funcs) {
-        console.ASSERT(funcs[key] && !functionMap[key], 'conflict function ' + key);
-        functionMap[key] = funcs[key];
-        (page as any)[key] = funcs[key];
+        let func: undefined|((e?: CktlV3.PageEvent) => void) = funcs[key]
+        if (func !== undefined) {
+          console.ASSERT(!functionMap[key], 'conflict function ' + key);
+          functionMap[key] = func;
+          (page as any)[key] = func;
+        }
       }
 
       /*DEBUG_START*/

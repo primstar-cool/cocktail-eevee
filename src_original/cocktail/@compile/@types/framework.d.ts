@@ -95,10 +95,12 @@ declare namespace CktlV3 {
   type IPageCreator = <T extends IPageParams>(pageParams: IPageParams & T) => void|IPageBase;
 
   interface PageEventTarget {
-    dataset: Record<string, number|string|object|boolean>
+    id?: string,
+    dataset: Record<string, number|string|object|boolean|object>
   }
 
   interface PageEvent {
+    type: string,
     target: PageEventTarget,
     currentTarget: PageEventTarget,
   }

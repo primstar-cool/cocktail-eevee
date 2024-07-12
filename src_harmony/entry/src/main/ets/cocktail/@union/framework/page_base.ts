@@ -15,8 +15,6 @@ export class CPageBase implements CktlV3.IPageBase {
   onLoad(options:  CktlV3Framework.PageLifeCycleParamQuery): void {
     console.log("onLsssoad");
 
-    this.data.text = JSON.stringify(options.query);
-
     if (this.pageParams.onLoad)
       this.pageParams.onLoad.call(this, options)
     // console.log(JSON.stringify(options))
@@ -58,10 +56,10 @@ export class CPageBase implements CktlV3.IPageBase {
   }
 }
 
-type PageBaseCreator<TPP extends CktlV3Framework.IPageParams> = (param: TPP) => (CktlV3Framework.IPageBase & TPP);
+type PageBaseClass<TPP extends CktlV3Framework.IPageParams> = new (param: TPP) => (CktlV3Framework.IPageBase & TPP);
 
 
-export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParams>(pageCreator: PageBaseCreator<TPP> , pageParam: TPP) {
+export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParams>(pageClass: PageBaseClass<TPP> , pageParam: TPP) {
 
   // CktlV3.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
   //
@@ -180,7 +178,11 @@ export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParam
   
   return (): (CktlV3Framework.IPageBase & TPP) => {
 
-    let newPage: (CktlV3Framework.IPageBase & TPP) = pageCreator(pageParam);
+    let newPage: (CktlV3Framework.IPageBase & TPP) = new pageClass(pageParam);
+
+    console.log("this.data 110");
+    console.log(Object.keys(newPage.data).join(", "));
+
 
     return newPage; //clone
   };

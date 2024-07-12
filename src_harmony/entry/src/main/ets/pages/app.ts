@@ -21,13 +21,14 @@ class AppParamsDemo extends CAppBase implements IAppParamsDemo {
 }
 
 AppBase<IAppParamsDemo>(
-  (params: IAppParamsDemo) => new AppParamsDemo(params),
+  AppParamsDemo,
   {
     globalData: {},
     abc: 111,
 
     onShow(res) {
       // debugger
+      console.log("AppBase onShow")
     },
 
     onLaunch() {

@@ -4,11 +4,11 @@ import CktlV3Event from "../../@compile/@types/event"
 export namespace CktlV3 {
 
   export type IAppBase = CktlV3Framework.IAppBase;
-  export type IAppParams = CktlV3Framework.IAppParams;
+  export type IAppDefine = CktlV3Framework.IAppDefine;
   export type AppLifeCycleParamQuery = CktlV3Framework.AppLifeCycleParamQuery;
   export type AppLifeCycleParamAny = CktlV3Framework.AppLifeCycleParamQuery;
 
-  export type IPageParams = CktlV3Framework.IPageParams;
+  export type IPageDefine = CktlV3Framework.IPageDefine;
   export type IPageMixed = CktlV3Framework.IPageMixed;
 
   export type IPageBase = CktlV3Framework.IPageBase;

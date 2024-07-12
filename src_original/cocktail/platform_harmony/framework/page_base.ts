@@ -8,90 +8,89 @@ export class CPageBase implements CktlV3.IPageBase {
 
   pageName: string;
   data: any;
-  route: string;
-  setData: (newData: object, renderCallback?: () => void) => void;
+  setData(_newData: object, renderCallback?: () => void) {
 
-  public onLoad: CktlV3Framework.IPageBaseLifeCycleQuery;
-  public onReady: CktlV3Framework.IPageBaseLifeCycleVoid;
-  public onHide: CktlV3Framework.IPageBaseLifeCycleVoid;
-  public onUnload: CktlV3Framework.IPageBaseLifeCycleVoid;
-  public setTitle: (title: string) => void;
-  // private readonly appParams: CktlV3Framework.IAppParams;
+  }
 
-  constructor(protected readonly pageParams: CktlV3Framework.IPageParams) {
+  onLoad(options: CktlV3Framework.PageLifeCycleParamQuery): void {
+    console.log("onLsssoad");
 
-    this.pageName = pageParams.pageName;
-    this.data = Object.assign({}, pageParams.data);
+    if (this.pageDefine.onLoad)
+      this.pageDefine.onLoad.call(this, options)
+    // console.log(JSON.stringify(options))
+  }
 
-    this.onLoad = (options: CktlV3Framework.PageLifeCycleParamQuery) => void {
+  public onReady(): void {
 
-    }
+  }
+  public onHide(): void {
+  
+  }
+  public onUnload(): void {
+  
+  }
+  public setTitle(_title: string): void {
 
-    this.onReady = () => void {
+  }
+  // protected readonly pageDefine: CktlV3Framework.IPageDefine;
 
-    }
-
-    this.onHide = () => void {
-
-    }
-
-    this.onUnload = () => void {
-
-    }
-
-    this.setTitle = (title: string) => {
-
-    }
+  constructor(protected readonly pageDefine: CktlV3Framework.IPageDefine, public readonly route: string ) {
+    console.log("CPageBase constructor")
+    // this.pageDefine = pageDefine;
+    this.pageName = pageDefine.pageName;
+    this.data = Object.assign({}, pageDefine.data);
+    
+    // this.onLoad({query: {"asd": '2323'}})
 
   }
 }
 
-type PageBaseClass<TPP extends CktlV3Framework.IPageParams> = new (param: TPP) => (CktlV3Framework.IPageBase & TPP);
+type PageBaseClass<TPP extends CktlV3Framework.IPageDefine> = new (param: TPP) => (CktlV3Framework.IPageBase & TPP);
 
 
-export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParams>(pageClass: PageBaseClass<TPP> , pageParam: TPP) {
+export default function createHarmonyPage<TPP extends CktlV3Framework.IPageDefine>(pageClass: PageBaseClass<TPP> , pageDefineParam: TPP) {
 
-  // CktlV3.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
+  // CktlV3.ASSERT(pageDefineParam && pageDefineParam.pageName, 'every cocktail page should has a pageName for identity');
   //
   //
-  // CktlV3.getApp().ec.notify(FID.ON_PAGE_DATA_PREPARING, pageParam);
+  // CktlV3.getApp().ec.notify(FID.ON_PAGE_DATA_PREPARING, pageDefineParam);
   //
-  // if (!pageParam.onShow) {
-  //   pageParam.onShow = basePageOnShow;
+  // if (!pageDefineParam.onShow) {
+  //   pageDefineParam.onShow = basePageOnShow;
   // } else {
-  //   pageParam.onShow = (function(oldFunc) {
+  //   pageDefineParam.onShow = (function(oldFunc) {
   //     return function(this: CktlV3.IPageBase<TPP>) {
   //       basePageOnShow.call(this);
   //       oldFunc.call(this);
   //     };
-  //   })(pageParam.onShow);
+  //   })(pageDefineParam.onShow);
   // }
   //
-  // if (!pageParam.onHide) {
-  //   pageParam.onHide = basePageOnHide;
+  // if (!pageDefineParam.onHide) {
+  //   pageDefineParam.onHide = basePageOnHide;
   // } else {
-  //   pageParam.onHide = (function(oldFunc) {
+  //   pageDefineParam.onHide = (function(oldFunc) {
   //     return function(this: CktlV3.IPageBase<TPP>) {
   //       basePageOnHide.call(this);
   //       oldFunc.call(this);
   //     };
-  //   })(pageParam.onHide);
+  //   })(pageDefineParam.onHide);
   // }
   //
-  // if (!pageParam.onReady) {
-  //   pageParam.onReady = basePageOnReady;
+  // if (!pageDefineParam.onReady) {
+  //   pageDefineParam.onReady = basePageOnReady;
   // } else {
-  //   pageParam.onReady = (function(oldFunc) {
+  //   pageDefineParam.onReady = (function(oldFunc) {
   //     return function(this: CktlV3.IPageBase<TPP>) {
   //       basePageOnReady.call(this);
   //       oldFunc.call(this);
   //     };
-  //   })(pageParam.onReady);
+  //   })(pageDefineParam.onReady);
   // }
   //
   //
   //
-  // pageParam.onLoad = (function(oldFunc) {
+  // pageDefineParam.onLoad = (function(oldFunc) {
   //   return function(this: CktlV3.IPageBase<TPP>, options: CktlV3.PageLifeCycleParamQuery) {
   //     const app = CktlV3.getApp();
   //     app.ec.notify(FID.ON_PAGE_LOADING, { pageName: this.pageName, options, page: this });
@@ -111,9 +110,9 @@ export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParam
   //     }
   //     app.ec.notify(FID.ON_PAGE_LOADED, { pageName: this.pageName, options, page: this });
   //   };
-  // })(pageParam.onLoad);
+  // })(pageDefineParam.onLoad);
   //
-  // pageParam.onUnload = (function(oldFunc) {
+  // pageDefineParam.onUnload = (function(oldFunc) {
   //   return function(this: CktlV3.IPageBase<TPP>) {
   //     const app = CktlV3.getApp();
   //     app.ec.notify(FID.ON_PAGE_UNLOADING, { pageName: this.pageName, page: this });
@@ -122,20 +121,20 @@ export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParam
   //     }
   //     app.ec.notify(FID.ON_PAGE_UNLOADED, { pageName: this.pageName, page: this });
   //   };
-  // })(pageParam.onUnload);
+  // })(pageDefineParam.onUnload);
   //
-  // // if (!pageParam.onPullDownRefresh) {
-  // //   pageParam.onPullDownRefresh = basePageOnPullDownRefresh;
+  // // if (!pageDefineParam.onPullDownRefresh) {
+  // //   pageDefineParam.onPullDownRefresh = basePageOnPullDownRefresh;
   // // } else {
-  // //   pageParam.onPullDownRefresh = (function(oldFunc) {
+  // //   pageDefineParam.onPullDownRefresh = (function(oldFunc) {
   // //     return function(options) {
   // //       basePageOnPullDownRefresh.call(this, options);
   // //       oldFunc.call(this, options);
   // //     };
-  // //   })(pageParam.onPullDownRefresh);
+  // //   })(pageDefineParam.onPullDownRefresh);
   // // }
   //
-  // // (pageParam as any).setTitle = function (title: string) {
+  // // (pageDefineParam as any).setTitle = function (title: string) {
   // //   // TODO
   // // };
   //
@@ -156,19 +155,19 @@ export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParam
   // // }
   //
   // /*DEBUG_START*/
-  // if (pageParam.data) {
-  //   pageParam.data["IS_" + "WXMP"] = 0;
-  //   pageParam.data["IS_" + "TTMA"] = 0;
-  //   pageParam.data["IS_" + "SWAN"] = 0;
-  //   pageParam.data["IS_" + "KSMP"] = 0;
-  //   pageParam.data["IS_" + "ALIMP"] = 0;
-  //   pageParam.data["IS_" + "HARMONY"] = 1;
+  // if (pageDefineParam.data) {
+  //   pageDefineParam.data["IS_" + "WXMP"] = 0;
+  //   pageDefineParam.data["IS_" + "TTMA"] = 0;
+  //   pageDefineParam.data["IS_" + "SWAN"] = 0;
+  //   pageDefineParam.data["IS_" + "KSMP"] = 0;
+  //   pageDefineParam.data["IS_" + "ALIMP"] = 0;
+  //   pageDefineParam.data["IS_" + "HARMONY"] = 1;
   // }
   // /*DEBUG_END*/
   
   return (): (CktlV3Framework.IPageBase & TPP) => {
 
-    let newPage: (CktlV3Framework.IPageBase & TPP) = new pageClass(pageParam);
+    let newPage: (CktlV3Framework.IPageBase & TPP) = new pageClass(pageDefineParam);
 
     return newPage; //clone
   };

@@ -12,8 +12,6 @@ let PageBaseCreator_index: () => CktlV3.IPageBase & IPageBase_index;
 
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 
-let a: any;
-
 class PageBase_index extends CPageBase implements IPageBase_index {
 
   data: GenInterface_index_pageData;
@@ -32,14 +30,14 @@ class PageBase_index extends CPageBase implements IPageBase_index {
 
   }
   bindViewTap() {
-    this.pageParams.bindViewTap(1,"2");
+    this.pageParams.bindViewTap.call(this, 1,"2");
   }
 
 }
 
 PageBaseCreator_index =
 PageBase<IPageBase_index>(
-  (params: IPageBase_index) => new PageBase_index(params),
+  PageBase_index,
   {
   pageName: "abc",
   data: {
@@ -57,9 +55,12 @@ PageBase<IPageBase_index>(
 
   onLoad(options: CktlV3.PageLifeCycleParamQuery) {
 
+    console.log("this.data 111");
+    console.log(Object.keys(this.data).join(", "));
+
     loadMixed(
       [
-        // () => new BottomText(),
+        BottomText,
       ],
       this,
       options

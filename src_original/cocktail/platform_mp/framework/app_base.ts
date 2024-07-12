@@ -1,7 +1,7 @@
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 import CktlV3 from "../../@compile/@types/framework"
 
-export = function createMPApp<TAPP extends CktlV3.IAppParams>(appParam: TAPP) {
+export = function createMPApp<TAPP extends CktlV3.IAppDefine>(appParam: TAPP) {
   
   /*DEBUG_START*/
   require("../../@union/debug/console_extends");

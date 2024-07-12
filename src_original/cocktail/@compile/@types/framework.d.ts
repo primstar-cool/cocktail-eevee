@@ -6,7 +6,7 @@ declare namespace CktlV3 {
   // type SimpleObjectTree = Record<string, number|string|boolean|null|undefined|SimpleObject>
 
   // <T extends IAnyObject>(options: Options<T>): void
-  export interface IAppParams {
+  export interface IAppDefine {
     // globalData?: any,
     onShow?: IAppBaseLifeCycleOptions;
     onLaunch?: IAppBaseLifeCycleOptions;
@@ -15,7 +15,7 @@ declare namespace CktlV3 {
     onPageNotFound?: IAppBaseLifeCycleQuery;
   }
 
-  interface IAppBase extends IAppParams {
+  interface IAppBase extends IAppDefine {
 
     $regNextPageRoute: (pageName: string) => void;
     __service_block__: Record<string, number>;
@@ -48,14 +48,14 @@ declare namespace CktlV3 {
   type IAppBaseLifeCycleOptions = (this: IAppBase, options: AppLifeCycleParamOptions) => void;
 
 
-  type IAppCreator = <T extends IAppParams>(appParams: T) => void|(IAppBase & T);
+  type IAppCreator = <T extends IAppDefine>(appParams: T) => void|(IAppBase & T);
 
   function getApp() :IAppBase;
 
 }
 
 declare namespace CktlV3 {
-  interface IPageParams {
+  interface IPageDefine {
     pageName: string;
     data?: any,
     onLoad?: IPageBaseLifeCycleQuery;
@@ -65,7 +65,7 @@ declare namespace CktlV3 {
     onUnload?: IPageBaseLifeCycleVoid;
   }
 
-  interface IPageBase extends IPageParams {
+  interface IPageBase extends IPageDefine {
     data: any;
     route: string;
     setData: (newData: object, renderCallback?: () => void) => void;
@@ -87,12 +87,12 @@ declare namespace CktlV3 {
 
 
   type PageLifeCycleParamAny = object;
-  type PageLifeCycleParamQuery = {query: {[""]?:string}};
+  type PageLifeCycleParamQuery = {query: Record<string, string>};
 
   type IPageBaseLifeCycleVoid = (this: IPageBase) => void;
   type IPageBaseLifeCycleQuery = (this: IPageBase, options: PageLifeCycleParamQuery) => void;
 
-  type IPageCreator = <T extends IPageParams>(pageParams: IPageParams & T) => void|IPageBase;
+  type IPageCreator = <T extends IPageDefine>(pageParams: IPageDefine & T) => void|IPageBase;
 
   interface PageEventTarget {
     id?: string,
@@ -149,7 +149,7 @@ declare namespace CktlV3 {
 }
 declare namespace CktlV3 {
 
-  interface IPageBaseWithMixed extends IPageParams {
+  interface IPageBaseWithMixed extends IPageDefine {
     $pageMixedInfo?: PageMixedInfo;
   }
 

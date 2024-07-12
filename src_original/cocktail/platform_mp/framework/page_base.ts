@@ -1,7 +1,7 @@
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 import CktlV3 from "../../@compile/@types/framework"
 
-export = function createMPPage(pageParam: CktlV3.IPageParams) {
+export = function createMPPage(pageParam: CktlV3.IPageDefine) {
 
   console.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
 

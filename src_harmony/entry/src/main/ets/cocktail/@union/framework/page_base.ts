@@ -8,9 +8,10 @@ import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 export class CPageBase implements CktlV3.IPageBase {
 
   pageName: string;
-  data: any;
-  route: string;
-  setData: (newData: object, renderCallback?: () => void) => void;
+  data: object;
+  setData(newData: object, renderCallback?: () => void): void {
+
+  }
 
   onLoad(options:  CktlV3Framework.PageLifeCycleParamQuery): void {
     console.log("onLsssoad");
@@ -23,29 +24,14 @@ export class CPageBase implements CktlV3.IPageBase {
   public onHide: CktlV3Framework.IPageBaseLifeCycleVoid;
   public onUnload: CktlV3Framework.IPageBaseLifeCycleVoid;
   public setTitle: (title: string) => void;
-  // protected readonly pageParams: CktlV3Framework.IPageParams;
+  // protected readonly pageParams: CktlV3Framework.IPageDefine;
 
-  constructor(protected readonly pageParams: CktlV3Framework.IPageParams) {
+  constructor(protected readonly pageParams: CktlV3Framework.IPageDefine, public readonly route: string ) {
   console.log("CPageBase constructor")
     // this.pageParams = pageParams;
     this.pageName = pageParams.pageName;
     this.data = Object.assign({}, pageParams.data);
 
-    this.onReady = () => void {
-
-    }
-
-    this.onHide = () => void {
-
-    }
-
-    this.onUnload = () => void {
-
-    }
-
-    this.setTitle = (title: string) => {
-
-    }
     console.log(typeof this.onLoad + " " + this.data.text);
     console.log(this.onLoad.toString());
 
@@ -56,10 +42,10 @@ export class CPageBase implements CktlV3.IPageBase {
   }
 }
 
-type PageBaseClass<TPP extends CktlV3Framework.IPageParams> = new (param: TPP) => (CktlV3Framework.IPageBase & TPP);
+type PageBaseClass<TPP extends CktlV3Framework.IPageDefine> = new (param: TPP) => (CktlV3Framework.IPageBase & TPP);
 
 
-export default function createHarmonyPage<TPP extends CktlV3Framework.IPageParams>(pageClass: PageBaseClass<TPP> , pageParam: TPP) {
+export default function createHarmonyPage<TPP extends CktlV3Framework.IPageDefine>(pageClass: PageBaseClass<TPP>, route: string , pageParam: TPP) {
 
   // CktlV3.ASSERT(pageParam && pageParam.pageName, 'every cocktail page should has a pageName for identity');
   //

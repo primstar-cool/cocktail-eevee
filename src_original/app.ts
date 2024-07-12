@@ -4,7 +4,7 @@ import AppBase from "./cocktail/@union/framework/app_base"
 
 // const EventTriggerOnce = require("./cocktail/@union/event/event_trigger_once");
 // const EventTriggerHolder = require("./cocktail/@union/event/event_trigger_holder");
-interface AppParamsDemo extends CktlV3.IAppParams {
+interface AppParamsDemo extends CktlV3.IAppDefine {
   globalData: {};
   abc: number
 }

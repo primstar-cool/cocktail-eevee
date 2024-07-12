@@ -3,7 +3,7 @@ type BottomTextPage = CktlV3.IPageBaseWithMixed;
 
 export class BottomText implements CktlV3.IPageMixed {
   constructor() {
-    console.log("BottomText")
+    console.log("BottomText created")
   }
   
   getPrivateData(_page: BottomTextPage): {text: string} {
@@ -11,12 +11,12 @@ export class BottomText implements CktlV3.IPageMixed {
   }
 
   getPrivateFunction(page: BottomTextPage) : Record<"onTapText"|"test", undefined|CktlV3.PageEventMethod> {
-    // const onTapText = () => {
-    //   console.log(page.data.text);
-    //   // page.bindViewTap()
-    // }
+    const onTapText = () => {
+      console.log(page.data.text);
+      // page.bindViewTap()
+    }
 
-    return {onTapText: undefined, test: undefined}
+    return {onTapText: onTapText, test: undefined}
   }
 
   onPageInit(page: BottomTextPage & CktlV3.IPageBase, _options?: CktlV3.PageLifeCycleParamQuery): void {

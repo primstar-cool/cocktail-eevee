@@ -17,9 +17,9 @@ export class CAppBase implements CktlV3Framework.IAppBase {
   public $regNextPageRoute(pageRoute: string): void {
     console.log("reg next page route: " + pageRoute);
   }
-  // private readonly appParams: CktlV3Framework.IAppParams;
+  // private readonly appParams: CktlV3Framework.IAppDefine;
 
-  constructor(protected readonly appParams: CktlV3Framework.IAppParams) {
+  constructor(protected readonly appParams: CktlV3Framework.IAppDefine) {
     this.__service_block__ = {};
     this.ec = new EventCenter('APP_EVENT_CENTER');
 
@@ -48,9 +48,9 @@ export class CAppBase implements CktlV3Framework.IAppBase {
 }
 
 
-type AppBaseClass<TAP extends CktlV3Framework.IAppParams> = new (param: TAP) => (CktlV3Framework.IAppBase & TAP);
+type AppBaseClass<TAP extends CktlV3Framework.IAppDefine> = new (param: TAP) => (CktlV3Framework.IAppBase & TAP);
 
-export default function createHarmonyApp<TAP extends CktlV3Framework.IAppParams>(AppClass: AppBaseClass<TAP> , appParam: TAP) {
+export default function createHarmonyApp<TAP extends CktlV3Framework.IAppDefine>(AppClass: AppBaseClass<TAP> , appParam: TAP) {
 
   /*DEBUG_START*/
   // require('../../@union/debug/console_extends.js');

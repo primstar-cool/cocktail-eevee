@@ -4,23 +4,23 @@ import AppBase, { CAppBase } from "../cocktail/@union/framework/app_base"
 // const EventTriggerOnce = require("./cocktail/@union/event/event_trigger_once");
 // const EventTriggerHolder = require("./cocktail/@union/event/event_trigger_holder");
 
-interface IAppParamsDemo extends CktlV3.IAppParams {
+interface IAppDefineDemo extends CktlV3.IAppDefine {
   globalData: object;
   abc: number;
 };
 
-class AppParamsDemo extends CAppBase implements IAppParamsDemo {
+class AppParamsDemo extends CAppBase implements IAppDefineDemo {
   globalData: {};
   abc: number;
 
-  constructor(appParams: IAppParamsDemo) {
+  constructor(appParams: IAppDefineDemo) {
     super(appParams);
     this.globalData = appParams.globalData;
     this.abc = appParams.abc;
   }
 }
 
-AppBase<IAppParamsDemo>(
+AppBase<IAppDefineDemo>(
   AppParamsDemo,
   {
     globalData: {},
@@ -32,7 +32,7 @@ AppBase<IAppParamsDemo>(
     },
 
     onLaunch() {
-      console.log("IAppParamsDemo onLaunch");
+      console.log("IAppDefineDemo onLaunch");
     },
   }
 );

@@ -1,43 +1,43 @@
+import CktlV3 from "../../@union/core/cktlv3"; // add by cocktail convertor
+const console = CktlV3.console; // add by cocktail convertor
 /*DEBUG_START*/
 import EventTriggerHolder from "../../@union/event/event_trigger_holder";
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 /*DEBUG_END*/
-
-import CktlV3 from "../core/cktlv3"
-
-const console = CktlV3.console; // add by cocktail convertor
 // function assign(target: Record<string, Object>, …source: Object[]): Record<string, Object> {
-//   for (let s of source) {
-//       for (let k of Object.keys(s)) {
-//           target[k] = Reflect.get(s, k)
-//       }
-//   }
-//   return target
+//   for (let s of source) { 
+//       for (let k of Object.keys(s)) { 
+//           target[k] = Reflect.get(s, k) 
+//       } 
+//   } 
+//   return target 
 // }
+type PageMixedClassEs6Wrap = {default: CktlV3.PageMixedClass};
 
-export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.PageMixedClass>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedClass|PageMixedClassEs6Wrap>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
 
   const mixedInstanceArray: CktlV3.IPageMixed[] = mixedClassArray.map(
-    (clzCreator: CktlV3.PageMixedCreator|CktlV3.PageMixedClass) =>
-    {
-      if (clzCreator.constructor) {
-        return new (clzCreator as CktlV3.PageMixedClass)()
-      } else  {
-        return (clzCreator as CktlV3.PageMixedCreator)();
-      }
-    });
-
+    (clzCreator: CktlV3.PageMixedClass|PageMixedClassEs6Wrap) => 
+      {
+        if (typeof clzCreator === 'function') {
+          return new (clzCreator as CktlV3.PageMixedClass)()
+        } else {
+          let wrap: PageMixedClassEs6Wrap = clzCreator as PageMixedClassEs6Wrap;
+          return new wrap.default;
+        }
+    }).filter(v => v!== undefined ) as CktlV3.IPageMixed[];
+  
 
   console.ASSERT(!page.$pageMixedInfo);
-
+ 
   page.$pageMixedInfo = {
-
+    
   }
 
-
+  
   // const pageMixed: CktlV3.PageBase & { $specMixedInstanceArray?: Array<CktlV3.IPageMixed>, $mixedInstanceArray?: Array<CktlV3.IPageMixed>, $debugRawFunctionMap?: String[], $unloadChecker?: any } = page;
 
   if (page.$pageMixedInfo.$specMixedInstanceArray) {
@@ -78,7 +78,7 @@ export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.
       Object.assign(privateDataCache!, privateData);
     }
   });
-  // page.setData(privateDataCache);
+  page.setData(privateDataCache);
   privateDataCache = undefined;
 
   /*DEBUG_START*/
@@ -102,14 +102,18 @@ export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.
       }
       /*DEBUG_END*/
 
+      
 
-
-      let funcs: Record<string, undefined|CktlV3.PageEventMethod> = ins.getPrivateFunction(page);
+      let funcs: Record<string, undefined|((e?: CktlV3.PageEvent) => void)> = ins.getPrivateFunction(page);
 
       for (let key in funcs) {
-        console.ASSERT(funcs[key] && !functionMap[key], 'conflict function ' + key);
-        functionMap[key] = funcs[key];
-        (page as any)[key] = funcs[key];
+        let func: undefined|((e?: CktlV3.PageEvent) => void) = funcs[key]
+        if (func !== undefined) {
+          console.ASSERT(!functionMap[key], 'conflict function ' + key);
+          functionMap[key] = func;
+          (page as any)[key] = func;
+        }
+        
       }
 
       /*DEBUG_START*/
@@ -132,17 +136,17 @@ export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.
   );
 
   /*DEBUG_START*/
-  // page.$pageMixedInfo.$unloadChecker = new EventTriggerHolder(FID.ON_PAGE_UNLOADED, (
-  //   _eventName: any, eventData : any) => {
-  //   if (eventData.page === page) {
-  //     console.ASSERT(false, "forget use【unloadMixed】in page unload!!!")
-  //   }
-  // })
+  page.$pageMixedInfo.$unloadChecker = new EventTriggerHolder(FID.ON_PAGE_UNLOADED, (
+    _eventName: any, eventData : any) => {
+    if (eventData.page === page) {
+      console.ASSERT(false, "forget use【unloadMixed】in page unload!!!")
+    }
+  })
   /*DEBUG_END*/
 
 };
 
-export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage) {
+export function unloadMixed(page: CktlV3.IPageBaseWithMixed) {
 
   // debugger
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
@@ -176,9 +180,10 @@ export function unloadMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage
 };
 
 
-export function forEachMixed(page: CktlV3.IPageBaseWithMixed, callback: () => void) {
+export function forEachMixed<TPage extends CktlV3.IPageBaseWithMixed>(page: TPage, callback: () => void) {
 
   if (page && page.$pageMixedInfo?.$mixedInstanceArray && callback) {
     page.$pageMixedInfo.$mixedInstanceArray.forEach(callback);
   }
+
 }

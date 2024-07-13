@@ -1,6 +1,4 @@
-
 import CktlV3 from "../../cocktail/@union/core/cktlv3"
-
 export interface GenInterface_index_pageData_userInfo_complex_aaaa {
   b: number;
 }
@@ -23,16 +21,11 @@ export interface GenInterface_index_pageData {
   text?: string; /*define mixed bottom_text*/
 }
 
-export interface GenInterface_index_pageMethods {
+interface GenInterface_index_pageMethods {
   bindViewTap: (a: number, b: string) => unknown; /*define in page*/
   onTapText?: CktlV3.PageEventMethod; /*define mixed bottom_text*/
   test?: CktlV3.PageEventMethod; /*define mixed bottom_text*/
 }
-
-
-
 export interface IPageBase_index extends CktlV3.IPageBaseWithMixed, GenInterface_index_pageMethods {
-  
   data: GenInterface_index_pageData;
-}// index.ts
-
+}

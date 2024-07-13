@@ -1,11 +1,8 @@
 let consoleOriginal = console;
 let consoleExt = {
   ASSERT: (flag:boolean|any, ...args: any) :void => {
-    if (!flag) {
-      debugger;
-      console.error.apply(console, args);
-      // throw new Error(args)
-    }
+    consoleOriginal.log("BBB")
+    consoleOriginal.log.call(consoleOriginal,flag + "AAA")
   },
   log: (...args) => {
     consoleOriginal.log.apply(consoleOriginal, args)

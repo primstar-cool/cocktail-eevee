@@ -21,8 +21,6 @@ export namespace CktlV3 {
   export type PageMixedCreator = CktlV3Framework.PageMixedCreator;
   export type PageMixedClass = CktlV3Framework.PageMixedClass;
 
-
-
   export type PageLifeCycleParamQuery = CktlV3Framework.PageLifeCycleParamQuery;
   export type PageEvent = CktlV3Framework.PageEvent;
   export type PageMixedInfo = CktlV3Framework.PageMixedInfo;
@@ -44,6 +42,9 @@ export namespace CktlV3 {
   export type EventTriggerHolderRefer = CktlV3Event.EventTriggerHolderRefer;
   
   ///harmony add
+
+  export type HarmonySeyKeyValueFunc = (key: string, value: any) => void;
+
   let $app: CktlV3Framework.IAppBase;
 
   export function getApp() :CktlV3Framework.IAppBase {

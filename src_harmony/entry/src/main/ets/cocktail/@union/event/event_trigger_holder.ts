@@ -1,6 +1,8 @@
 
 // import CktlV3 as CktlV3 from "../../@compile/@types/event"
 import CktlV3 from "../../@union/core/cktlv3"
+const getApp = CktlV3.getApp; // add by cocktail convertor
+
 
 export default class EventTriggerHolder implements CktlV3.IDispose {
   protected m_callback?: any;
@@ -16,7 +18,7 @@ export default class EventTriggerHolder implements CktlV3.IDispose {
     this.m_referWrap = { refer, self: this };
     this.m_eventType = evtId;
 
-    this.m_eventCenter = eventCenter || CktlV3.getApp().ec;
+    this.m_eventCenter = eventCenter || getApp().ec;
 
     this.m_eventCenter!.register(this.m_eventType, this._callbackWrap, this.m_referWrap);
   }

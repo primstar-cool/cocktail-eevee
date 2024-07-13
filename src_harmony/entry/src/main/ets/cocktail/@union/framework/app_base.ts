@@ -38,7 +38,7 @@ export class CAppBase implements CktlV3Framework.IAppBase {
     }
     this.onError = (error: CktlV3Framework.AppLifeCycleParamAny) => {
       this.ec.notify(FID.ON_APP_ERROR, { error: error });
-      if (this.appParams.onError) this.appParams.onError.call(this);
+      if (this.appParams.onError) this.appParams.onError.call(this, error);
     }
     this.onPageNotFound = (options: CktlV3Framework.AppLifeCycleParamQuery) => {
       this.ec.notify(FID.ON_PAGE_NOT_FOUND, { options });
@@ -50,7 +50,7 @@ export class CAppBase implements CktlV3Framework.IAppBase {
 
 type AppBaseClass<TAP extends CktlV3Framework.IAppDefine> = new (param: TAP) => (CktlV3Framework.IAppBase & TAP);
 
-export default function createHarmonyApp<TAP extends CktlV3Framework.IAppDefine>(AppClass: AppBaseClass<TAP> , appParam: TAP) {
+export default function createHarmonyApp<TAP extends CktlV3Framework.IAppDefine>(AppClass: AppBaseClass<TAP>, appParam: TAP) {
 
   /*DEBUG_START*/
   // require('../../@union/debug/console_extends.js');

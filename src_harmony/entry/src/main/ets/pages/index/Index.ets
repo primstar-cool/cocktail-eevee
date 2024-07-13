@@ -27,7 +27,10 @@ struct Index {
       }
       .id("index-container")
       .height("100%")
+      .justifyContent(FlexAlign.SpaceAround)
+      .alignItems(HorizontalAlign.Center)
     }
+    .height("100%").width("100%")
     
   }  
 

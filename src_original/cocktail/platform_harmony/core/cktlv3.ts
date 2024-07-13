@@ -42,6 +42,9 @@ export namespace CktlV3 {
   export type EventTriggerHolderRefer = CktlV3Event.EventTriggerHolderRefer;
   
   ///harmony add
+
+  export type HarmonySeyKeyValueFunc = (key: string, value: any) => void;
+
   let $app: CktlV3Framework.IAppBase;
 
   export function getApp() :CktlV3Framework.IAppBase {

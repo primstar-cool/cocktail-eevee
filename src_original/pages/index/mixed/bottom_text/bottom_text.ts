@@ -1,9 +1,9 @@
 import CktlV3 from "../../../../cocktail/@union/core/cktlv3"
 type BottomTextPage = CktlV3.IPageBaseWithMixed;
 
-export class BottomText implements CktlV3.IPageMixed {
+export default class BottomText implements CktlV3.IPageMixed {
   getPrivateData(_page: BottomTextPage): {text: string} {
-    return {text: "Hello Cocktail"}
+    return {text: "Hello Cocktail v2"}
   }
 
   getPrivateFunction(page: BottomTextPage) : Record<"onTapText"|"test", undefined|CktlV3.PageEventMethod> {

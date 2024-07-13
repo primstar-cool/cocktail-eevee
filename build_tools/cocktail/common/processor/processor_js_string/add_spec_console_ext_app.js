@@ -12,7 +12,7 @@ module.exports = function addSpecConsoleExtApp(
     || content.includes("console.WARN")
     || content.includes("console.ERROR")
   let hasGetApp = content.includes("getApp")
-  if (hasConsoleExt && !hasGetApp) 
+  if (!hasConsoleExt && !hasGetApp) 
     return content;
   
 
@@ -27,14 +27,14 @@ module.exports = function addSpecConsoleExtApp(
 
   } else {
     let index = content.indexOf("/core/cktlv3");
-    let analysisContent = content.substring(0 ,index);
+    let analysisContent = content.substring(0, index);
     analysisContent = analysisContent.substring(analysisContent.lastIndexOf("import"));
     analysisContent = analysisContent.substring(6).trim()
     let CktlV3Refer = analysisContent.substring(0 , analysisContent.indexOf(" ", 6)).trim();
 
     let enter = content.indexOf("\n", index);
 
-    content = content.substring(0, enter) + 
+    content = content.substring(0, enter)
     + (hasConsoleExt ? `\nconst console = ${CktlV3Refer}.console; // add by cocktail convertor\n` : '')
     + (hasGetApp ? `\nconst getApp = ${CktlV3Refer}.getApp; // add by cocktail convertor\n` : '')
     + content.substring(enter);

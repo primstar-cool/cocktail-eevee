@@ -9,6 +9,7 @@ module.exports = function convert(targetPlatform) {
     // console.log("convert " + targetPlatform);
     return through2.obj(function (file, _, cb) {
         if (file.isBuffer()) {
+            // console.log(file.path)
             if(file.extname === '.js' || file.extname === '.ts') {
                 let source = file.contents.toString();
                 let result = removeUntagetPlatform(source, file.path, targetPlatform);

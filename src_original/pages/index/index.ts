@@ -1,5 +1,7 @@
 import { loadMixed, unloadMixed } from "../../cocktail/@union/utils/page_mixed";
 import CktlV3 from "../../cocktail/@union/core/cktlv3"
+const {IS_WXMP} = require("../../cocktail/@compile/target_compile_platform.js");
+
 
 // 获取应用实例
 const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
@@ -46,9 +48,8 @@ PageBase({
   },
   // 事件处理函数
   bindViewTap(a: number, b: string) {
-    wx.redirectTo({
-      url: '../logs/logs',
-    })
+    IS_WXMP && wx.redirectTo({url: '../logs/logs',})
+
     return {B: 2}
   }
 })

@@ -2,7 +2,8 @@
 import EventTriggerHolder from "../../@union/event/event_trigger_holder";
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 /*DEBUG_END*/
-import CktlV3 from "../../@compile/@types/framework"
+import CktlV3 from "../../@union/core/cktlv3";
+
 // function assign(target: Record<string, Object>, …source: Object[]): Record<string, Object> { 
 //   for (let s of source) { 
 //       for (let k of Object.keys(s)) { 
@@ -11,30 +12,23 @@ import CktlV3 from "../../@compile/@types/framework"
 //   } 
 //   return target 
 // }
-type PageMixedClassEs6Wrap = {[key:string]: CktlV3.PageMixedClass};
+type PageMixedClassEs6Wrap = {default: CktlV3.PageMixedClass};
 
-export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedCreator|CktlV3.PageMixedClass|PageMixedClassEs6Wrap>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
+export function loadMixed(mixedClassArray: Array<CktlV3.PageMixedClass|PageMixedClassEs6Wrap>, page: CktlV3.IPageBaseWithMixed & CktlV3.IPageBase, options: CktlV3.PageLifeCycleParamQuery) {
   // console.ASSERT(page instanceof Page, 'page is not an instanceof Page');
 
   if (!mixedClassArray || !mixedClassArray.length) return;
 
   const mixedInstanceArray: CktlV3.IPageMixed[] = mixedClassArray.map(
-    (clzCreator: CktlV3.PageMixedCreator|CktlV3.PageMixedClass|PageMixedClassEs6Wrap) => 
+    (clzCreator: CktlV3.PageMixedClass|PageMixedClassEs6Wrap) => 
       {
         if (typeof clzCreator === 'function') {
-          if (clzCreator.constructor) {
-            return new (clzCreator as CktlV3.PageMixedClass)()
-          } else  {
-            return (clzCreator as CktlV3.PageMixedCreator)();
-          } 
+          return new (clzCreator as CktlV3.PageMixedClass)()
         } else {
           let wrap: PageMixedClassEs6Wrap = clzCreator as PageMixedClassEs6Wrap;
-          for (let key in wrap) {
-            return new (wrap[key])();
-          }
-          return undefined;
+          return new wrap.default;
         }
-    }).filter(v=> v!== undefined ) as CktlV3.IPageMixed[];
+    }).filter(v => v!== undefined ) as CktlV3.IPageMixed[];
   
 
   console.ASSERT(!page.$pageMixedInfo);
@@ -181,7 +175,7 @@ export function unloadMixed(page: CktlV3.IPageBaseWithMixed) {
     page.$pageMixedInfo.$unloadChecker = undefined;
   }
   /*DEBUG_END*/
-  wx
+
   page.$pageMixedInfo = undefined;
 };
 

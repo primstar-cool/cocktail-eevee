@@ -3,13 +3,19 @@ import CktlV3 from "../core/cktlv3"
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 
 
-
 export class CPageBase implements CktlV3.IPageBase {
 
   pageName: string;
   data: any;
-  setData(_newData: object, renderCallback?: () => void) {
+  setData(newData: Record<string, any>, _renderCallback?: () => void) {
+    Object.assign(this.data, newData);
 
+
+    Object.keys(
+      newData
+    ).forEach( 
+      (key:string) => this.harmonySetKeyValueFn(key, newData[key])
+    );
   }
 
   onLoad(options: CktlV3Framework.PageLifeCycleParamQuery): void {
@@ -34,21 +40,27 @@ export class CPageBase implements CktlV3.IPageBase {
   }
   // protected readonly pageDefine: CktlV3Framework.IPageDefine;
 
-  constructor(protected readonly pageDefine: CktlV3Framework.IPageDefine, public readonly route: string ) {
+  
+  constructor(
+    protected readonly pageDefine: CktlV3Framework.IPageDefine,
+    public readonly route: string,
+    public options: CktlV3Framework.PageLifeCycleParamQuery,
+    private harmonySetKeyValueFn: CktlV3.HarmonySeyKeyValueFunc,
+  ) {
     console.log("CPageBase constructor")
     // this.pageDefine = pageDefine;
     this.pageName = pageDefine.pageName;
     this.data = Object.assign({}, pageDefine.data);
     
-    // this.onLoad({query: {"asd": '2323'}})
+    this.onLoad(options)
 
   }
 }
 
-type PageBaseClass<TPP extends CktlV3Framework.IPageDefine> = new (param: TPP) => (CktlV3Framework.IPageBase & TPP);
+type PageBaseClass<TPP extends CktlV3Framework.IPageDefine> = new (param: TPP, route: string, options: CktlV3Framework.PageLifeCycleParamQuery, harmonySetKeyValueFn: CktlV3.HarmonySeyKeyValueFunc) => (CktlV3Framework.IPageBase & TPP);
 
 
-export default function createHarmonyPage<TPP extends CktlV3Framework.IPageDefine>(pageClass: PageBaseClass<TPP> , pageDefineParam: TPP) {
+export default function createHarmonyPage<TPP extends CktlV3Framework.IPageDefine>(pageClass: PageBaseClass<TPP>, route: string ,pageDefineParam: TPP) {
 
   // CktlV3.ASSERT(pageDefineParam && pageDefineParam.pageName, 'every cocktail page should has a pageName for identity');
   //
@@ -165,10 +177,10 @@ export default function createHarmonyPage<TPP extends CktlV3Framework.IPageDefin
   // }
   // /*DEBUG_END*/
   
-  return (): (CktlV3Framework.IPageBase & TPP) => {
+  return (options: CktlV3Framework.PageLifeCycleParamQuery, harmonySetKeyValueFn: CktlV3.HarmonySeyKeyValueFunc): (CktlV3Framework.IPageBase & TPP) => {
 
-    let newPage: (CktlV3Framework.IPageBase & TPP) = new pageClass(pageDefineParam);
-
+    let newPage: (CktlV3Framework.IPageBase & TPP) = new pageClass(pageDefineParam, route, options, harmonySetKeyValueFn);
     return newPage; //clone
+    
   };
 }

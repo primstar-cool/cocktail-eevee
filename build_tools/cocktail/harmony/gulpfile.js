@@ -106,25 +106,34 @@ function platfromCopyTask() {
  * 柯里化拷贝任务
  * @param {TaskType} taskType 
  */
+function createCopyFrameTask() {
+  
+  return parallel.apply(null, [
+      createCocktailTask(),
+      compileCopyTask,
+    ]
+
+  );
+}
+
+function createCopyAppTask() {
+  
+  return parallel.apply(null, [
+      pageConvertTask("pages/index/index"),
+    ]
+
+  );
+}
+
 function createCopyTask() {
   
   // return compileCopyTask();
   return parallel.apply(null, [
-      createCocktailTask(),
-      compileCopyTask,
-      pageConvertTask("pages/index/index"),
+      createCopyFrameTask(),
+      createCopyAppTask(),
     ]
 
-  )
-  // series.apply(null, 
-  //     [
-  //       unionCopyTask,
-  //       compileCopyTask,
-  //       commonCopyTask,
-  //       platfromCopyTask,
-  //       pageConvertTask("pages/index/index"),
-  //     ]
-  // );
+  );
 }
 
 function createCocktailTask() {
@@ -140,9 +149,8 @@ function createCocktailTask() {
 
 function pageConvertTask (pagePath) {
   return function () {
-    
-    return src([`${srcRootPath}/${pagePath}.ts`]).pipe(cleanUntargetPlatform()).pipe(getPageConvert(pagePath)).pipe(dest(distRootPath + "/cocktail/@union"));
-  
+    let pathDir = pagePath.substr(0, pagePath.lastIndexOf("/"));  
+    return src([`${srcRootPath}/${pagePath}.ts`, `${srcRootPath}/${pagePath}.wxml`]).pipe(cleanUntargetPlatform()).pipe(getPageConvert(pagePath)).pipe(dest(path.join(distRootPath, pathDir)));
   }
 }
 
@@ -195,5 +203,5 @@ exports.copy = createCopyTask()
  */
 exports.watch = createWatchTask()
 
-exports.default = exports.copy
+exports.default = exports.copy;
 

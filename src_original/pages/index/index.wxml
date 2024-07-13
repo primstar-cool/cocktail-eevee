@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <view class="container" id='index-container'>
-  <avatar userInfo="{{userInfo}}"/>
+  <!--avatar userInfo="{{userInfo}}"/-->
   <include src="./mixed/bottom_text/bottom_text.wxml"/>
   <text>{{sharePageData * 2 + "text"}}</text>
 </view>

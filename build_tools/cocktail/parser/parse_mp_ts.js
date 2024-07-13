@@ -12,7 +12,8 @@ function ASSERT (flag, ...args) {
 }
 
 module.exports = function (
-    content,filePath
+    content,filePath,
+    appendTsAstNode = false
 ) {
 
 
@@ -190,18 +191,18 @@ module.exports = function (
                         "scope": "@CONTEXT__",
                         "kind": "const",
                         "type": `(${paramsStringWithType}) => ${ret[0].text.trim()}`,
-                        "code": `(${paramsStringWithType}): ${ret[0].text.trim()} {\n  return this.pageContent.${identifier}(${params.length ? params.map(v=>v.children[0].tsNode.escapedText).join(", ")  : ''});\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                        "code": `(${paramsStringWithType}): ${ret[0].text.trim()} {\n  return this.pageDefine.${identifier}.call(this, ${params.length ? params.map(v=>v.children[0].tsNode.escapedText).join(", ")  : ''});\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
                         "comment": `define in page`,
 
                     }
                 );
 
-                    debugger
+                    // debugger
             }
         );
         
 
-        debugger
+        // debugger
 
         // debugger
         let onLoadExpressNode = methodDeclarationNode.find(
@@ -214,7 +215,7 @@ module.exports = function (
 
             if (requireMixed?.length) {
                let requireMixedPath = requireMixed.map(v=> (v.children[1]?.text||'')).filter( v => v.includes("/mixed/")).map( v => path.join(path.dirname(filePath), eval(v)));
-               debugger
+            //    debugger
 
                requireMixedPath.forEach(
                     v => {
@@ -307,7 +308,7 @@ module.exports = function (
                             )[0];
 
                             if (getPrivateFunctionNode) {
-                                debugger
+                                // debugger
                                 let retTypeNode = getPrivateFunctionNode.children.find(vv => vv.type !== 'Parameter' && vv.type !== 'Identifier' && vv.type !== 'Block')
 
                                 ASSERT (retTypeNode.type === "TypeReference");
@@ -339,7 +340,7 @@ module.exports = function (
                                             "scope": "@CONTEXT__",
                                             "kind": "const",
                                             "type": `${funcType}`,
-                                            "code": `(e?: CktlV3.PageEvent): void {\n  if (this.pageContent.${name})\n    return this.pageContent.${name}(e);\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
+                                            "code": `(e?: CktlV3.PageEvent): void {\n  if (this.pageDefine.${name})\n    return this.pageDefine.${name}.call(this, e);\n}`,// codeNode ? codeNode.text.trim().replace(new RegExp(propertyName+"[\\s]*:"), `${propertyName} =`) : undefined,
                                             "comment": `define mixed ${v.substr(v.lastIndexOf("/") + 1)}`,
                                             "question": true,
                                         })
@@ -360,14 +361,17 @@ module.exports = function (
 
 
             }
-            debugger
+            // debugger
         }
 
-        debugger
+        // debugger
 
     } else {
         ASSERT(false, "can't find PageBase object")
     }
+
+    if (appendTsAstNode)
+        result.tsAstNode = tsAstNode;
 
     return result;
 }

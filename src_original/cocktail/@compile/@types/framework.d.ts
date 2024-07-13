@@ -57,7 +57,7 @@ declare namespace CktlV3 {
 declare namespace CktlV3 {
   interface IPageDefine {
     pageName: string;
-    data?: any,
+    data?: any;
     onLoad?: IPageBaseLifeCycleQuery;
     onShow?: IPageBaseLifeCycleVoid;
     onReady?: IPageBaseLifeCycleVoid;
@@ -135,8 +135,8 @@ declare namespace CktlV3 {
      * 组件的属性列表
      */
     options?: ComponentParamsOption;
-    data?: any;
-    properties?: any;
+    data?: object;
+    properties?: object;
     lifetimes?: ComponentParamsLifetimes,
     pageLifetimes?: ComponentParamsPageLifetimes,
     methods?: Record<string, (this: ComponentBase, ...args: object[])=>void>

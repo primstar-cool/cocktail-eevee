@@ -1,5 +1,6 @@
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 import CktlV3 from "../../@compile/@types/framework"
+declare let tt: undefined|any;
 
 export = function createMPApp<TAPP extends CktlV3.IAppDefine>(appParam: TAPP) {
   

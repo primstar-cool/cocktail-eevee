@@ -17,7 +17,7 @@ struct Index {
     Column() {
       /*<!--index.wxml-->*/
       Column(/*index-container-c-container*/) {
-        Text((("<!--avatar userInfo=\"" + this.userInfo) + "\"/-->") /*index-container-c-container::auto-text-0*/)
+        /*<!--avatar userInfo="{{userInfo}}"/-->*/
         /*<!--expand include from mixed/bottom_text/bottom_text.wxml-->*/
         Row(/*index-s4-c-user-motto*/) {
           Text(this.text /*index-s5*/).textAlign(TextAlign.Center).fontColor(0x0000FF)

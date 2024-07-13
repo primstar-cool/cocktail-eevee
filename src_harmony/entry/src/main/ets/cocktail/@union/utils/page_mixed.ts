@@ -1,10 +1,12 @@
-import CktlV3 from "../../@union/core/cktlv3"; // add by cocktail convertor
-const console = CktlV3.console; // add by cocktail convertor
 /*DEBUG_START*/
 import EventTriggerHolder from "../../@union/event/event_trigger_holder";
 import {SystemEvent as FID} from '../../@compile/@enum/system_event'
 /*DEBUG_END*/
-// function assign(target: Record<string, Object>, …source: Object[]): Record<string, Object> {
+import CktlV3 from "../../@union/core/cktlv3";
+const console = CktlV3.console; // add by cocktail convertor
+
+
+// function assign(target: Record<string, Object>, …source: Object[]): Record<string, Object> { 
 //   for (let s of source) { 
 //       for (let k of Object.keys(s)) { 
 //           target[k] = Reflect.get(s, k) 
